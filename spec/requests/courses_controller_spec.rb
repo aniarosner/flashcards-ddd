@@ -9,6 +9,9 @@ RSpec.describe 'Courses', type: :request do
     post '/courses', params: english_grammar, headers: { accept: 'application/json' }
     expect(response).to have_http_status(204)
     expect(response.body).to eq('')
+
+    get '/courses', headers: { accept: 'application/json' }
+    expect(JSON.parse(response.body)).to eq(english_grammar)
   end
 
   def english_grammar
