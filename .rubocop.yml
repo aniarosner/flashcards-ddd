@@ -5,7 +5,7 @@ AllCops:
     - vendor/bundle/**/*
     - vendor/cache/**/*
 
-TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.5
 
 Documentation:
   Enabled: false
