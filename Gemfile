@@ -14,6 +14,7 @@ gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
 
 group :development, :test do
+  gem 'pry-byebug', '~> 3.6'
 end
 
 group :development do
@@ -24,6 +25,8 @@ group :development do
 end
 
 group :test do
+  gem 'rspec-rails', '~> 3.8', '>= 3.8.1'
+  gem 'database_cleaner', '~> 1.7'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
