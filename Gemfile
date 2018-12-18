@@ -6,14 +6,14 @@ ruby '2.5.1'
 gem 'rails', '~> 5.2.2'
 gem 'pg', '~> 1.1', '>= 1.1.3'
 gem 'puma', '~> 3.11'
+gem 'rails_event_store', '~> 0.35.0'
+gem 'rubocop', '~> 0.61.1'
 
 # UI
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
-
-gem 'rails_event_store', '~> 0.35.0'
 
 group :development, :test do
   gem 'pry-byebug', '~> 3.6'
