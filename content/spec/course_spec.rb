@@ -2,7 +2,7 @@ module Content
   RSpec.describe 'Course aggregate' do
     specify 'create new course' do
       course = Content::Course.new(course_english_grammar[:uuid])
-      course.register
+      course.create
 
       expect(course).to have_applied(course_created)
     end

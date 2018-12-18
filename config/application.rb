@@ -10,5 +10,7 @@ module FlashcardsApp
 
     config.paths.add 'command/lib', eager_load: true
     config.paths.add 'content/lib', eager_load: true
+
+    Rails.configuration.event_store = RailsEventStore::Client.new
   end
 end
