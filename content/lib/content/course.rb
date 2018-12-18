@@ -6,7 +6,7 @@ module Content
 
     def initialize(uuid)
       @uuid  = uuid
-      @state = nil
+      @state = Content::CourseState.new(:initialized)
     end
 
     def create

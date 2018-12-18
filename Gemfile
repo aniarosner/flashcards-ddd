@@ -31,6 +31,7 @@ end
 group :test do
   gem 'rspec-rails', '~> 3.8', '>= 3.8.1'
   gem 'database_cleaner', '~> 1.7'
+  gem 'rails_event_store-rspec', '~> 0.35.0'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
