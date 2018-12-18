@@ -1,5 +1,5 @@
 module Content
-  class AddCourse
+  class CreateCourse
     include Command
 
     attr_reader :course_uuid
