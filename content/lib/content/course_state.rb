@@ -1,7 +1,7 @@
 module Content
   class CourseState
     InvalidState = Class.new(StandardError)
-    VALID_STATES = %i[initialized created].freeze
+    VALID_STATES = %i[initialized created removed].freeze
 
     def initialize(state)
       raise InvalidState unless state.in?(VALID_STATES)
@@ -11,6 +11,10 @@ module Content
 
     def created?
       @state == :created
+    end
+
+    def removed?
+      @state == :removed
     end
   end
 end

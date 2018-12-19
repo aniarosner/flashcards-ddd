@@ -13,6 +13,14 @@ module Content
       expect(event_store).to have_published(course_created, course_title_set)
     end
 
+    specify 'remove a course' do
+      Content::CourseCommandHandler.new.create_course(create_course)
+      Content::CourseCommandHandler.new.set_course_title(set_course_title)
+      Content::CourseCommandHandler.new.remove_course(set_course_title)
+
+      expect(event_store).to have_published(course_created, course_title_set, course_removed)
+    end
+
     private
 
     def create_course
@@ -30,6 +38,12 @@ module Content
 
     def course_created
       an_event(Content::CourseCreated).with_data(
+        course_uuid: course_english_grammar[:course_uuid]
+      ).strict
+    end
+
+    def course_removed
+      an_event(Content::CourseRemoved).with_data(
         course_uuid: course_english_grammar[:course_uuid]
       ).strict
     end

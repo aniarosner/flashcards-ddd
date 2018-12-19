@@ -15,4 +15,13 @@ class CoursesController < ApplicationController
       end
     end
   end
+
+  def destroy
+    respond_to do |format|
+      format.json do
+        command_bus.call(Content::RemoveCourse.new(course_uuid: params[:course_uuid]))
+        head :no_content
+      end
+    end
+  end
 end

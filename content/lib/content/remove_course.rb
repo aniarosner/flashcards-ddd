@@ -1,5 +1,5 @@
 module Content
-  class CreateCourse
+  class RemoveCourse
     include Command
 
     attr_reader :course_uuid # TODO: add validation for uuid format

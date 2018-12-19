@@ -15,6 +15,15 @@ module Content
       expect(course).to have_applied(course_created, course_title_set)
     end
 
+    specify 'remove a course' do
+      course = Content::Course.new(course_english_grammar[:course_uuid])
+      course.create
+      course.set_title(course_english_grammar[:title])
+      course.remove
+
+      expect(course).to have_applied(course_created, course_title_set, course_removed)
+    end
+
     private
 
     def course_created
@@ -27,6 +36,12 @@ module Content
       an_event(Content::CourseTitleSet).with_data(
         course_uuid: course_english_grammar[:course_uuid],
         title: course_english_grammar[:title]
+      ).strict
+    end
+
+    def course_removed
+      an_event(Content::CourseRemoved).with_data(
+        course_uuid: course_english_grammar[:course_uuid]
       ).strict
     end
 

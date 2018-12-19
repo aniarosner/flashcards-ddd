@@ -4,6 +4,7 @@ module Content
 
     AlreadyCreated  = Class.new(StandardError)
     NotCreated      = Class.new(StandardError)
+    AlreadyRemoved  = Class.new(StandardError)
 
     def initialize(course_uuid)
       @course_uuid = course_uuid
@@ -22,11 +23,22 @@ module Content
       apply(Content::CourseTitleSet.new(data: { course_uuid: @course_uuid, title: title }))
     end
 
+    def remove
+      raise NotCreated unless @state.created?
+      raise AlreadyRemoved if @state.removed?
+
+      apply(Content::CourseRemoved.new(data: { course_uuid: @course_uuid }))
+    end
+
     on Content::CourseCreated do |_event|
       @state = Content::CourseState.new(:created)
     end
 
     on Content::CourseTitleSet do |_event|
+    end
+
+    on Content::CourseRemoved do |_event|
+      @state = Content::CourseState.new(:removed)
     end
   end
 end

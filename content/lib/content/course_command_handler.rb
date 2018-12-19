@@ -19,6 +19,14 @@ module Content
       end
     end
 
+    def remove_course(cmd)
+      ActiveRecord::Base.transaction do
+        with_course(cmd.course_uuid) do |course|
+          course.remove
+        end
+      end
+    end
+
     private
 
     def with_course(course_uuid)

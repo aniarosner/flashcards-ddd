@@ -11,11 +11,15 @@ Rails.configuration.to_prepare do
   end
 
   Rails.configuration.event_store.tap do |store|
-    store.subscribe(CourseList::EventHandler.new, to: [Content::CourseCreated, Content::CourseTitleSet])
+    store.subscribe(CourseList::EventHandler.new, to:
+    [
+      Content::CourseCreated, Content::CourseTitleSet, Content::CourseRemoved
+    ])
   end
 
   Rails.configuration.command_bus.tap do |bus|
     bus.register(Content::CreateCourse, ->(cmd) { Content::CourseCommandHandler.new.create_course(cmd) })
     bus.register(Content::SetCourseTitle, ->(cmd) { Content::CourseCommandHandler.new.set_course_title(cmd) })
+    bus.register(Content::RemoveCourse, ->(cmd) { Content::CourseCommandHandler.new.remove_course(cmd) })
   end
 end
