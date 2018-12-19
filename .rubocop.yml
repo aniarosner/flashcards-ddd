@@ -17,12 +17,6 @@ Metrics/LineLength:
 FrozenStringLiteralComment:
   Enabled: false
 
-Style/RaiseArgs:
-  Enabled: false
-
-Metrics/AbcSize:
-  Enabled: false
-
 Metrics/MethodLength:
   Enabled: false
 
@@ -42,4 +36,10 @@ Bundler/OrderedGems:
   Enabled: false
 
 Style/IndentHash:
+  Enabled: false
+
+Style/RaiseArgs:
+  Enabled: false
+
+Naming/AccessorMethodName:
   Enabled: false

@@ -11,6 +11,14 @@ module Content
       end
     end
 
+    def set_course_title(cmd)
+      ActiveRecord::Base.transaction do
+        with_course(cmd.course_uuid) do |course|
+          course.set_title(cmd.title)
+        end
+      end
+    end
+
     private
 
     def with_course(course_uuid)

@@ -16,5 +16,6 @@ Rails.configuration.to_prepare do
 
   Rails.configuration.command_bus.tap do |bus|
     bus.register(Content::CreateCourse, ->(cmd) { Content::CourseCommandHandler.new.create_course(cmd) })
+    bus.register(Content::SetCourseTitle, ->(cmd) { Content::CourseCommandHandler.new.set_course_title(cmd) })
   end
 end

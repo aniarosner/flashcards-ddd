@@ -6,6 +6,13 @@ module Content
       expect(event_store).to have_published(course_created)
     end
 
+    specify 'set course title' do
+      Content::CourseCommandHandler.new.create_course(create_course)
+      Content::CourseCommandHandler.new.set_course_title(set_course_title)
+
+      expect(event_store).to have_published(course_created, course_title_set)
+    end
+
     private
 
     def create_course
@@ -14,19 +21,30 @@ module Content
       )
     end
 
-    def course_created
-      an_event(Content::CourseCreated).with_data(course_created_data).strict
+    def set_course_title
+      Content::SetCourseTitle.new(
+        course_uuid: course_english_grammar[:course_uuid],
+        title: course_english_grammar[:title]
+      )
     end
 
-    def course_created_data
-      {
+    def course_created
+      an_event(Content::CourseCreated).with_data(
         course_uuid: course_english_grammar[:course_uuid]
-      }
+      ).strict
+    end
+
+    def course_title_set
+      an_event(Content::CourseTitleSet).with_data(
+        course_uuid: course_english_grammar[:course_uuid],
+        title: course_english_grammar[:title]
+      ).strict
     end
 
     def course_english_grammar
       {
-        course_uuid: 'e319e624-4449-4c90-9283-02300dcdd293'
+        course_uuid: 'e319e624-4449-4c90-9283-02300dcdd293',
+        title: 'English Grammar'
       }
     end
 
