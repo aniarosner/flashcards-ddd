@@ -11,12 +11,13 @@ RSpec.describe 'Courses', type: :request do
     expect(response.body).to eq('')
 
     get '/courses', headers: { accept: 'application/json' }
-    expect(JSON.parse(response.body)).to eq(english_grammar)
+
+    expect(JSON.parse(response.body)).to eq([english_grammar])
   end
 
   def english_grammar
     {
-      uuid: 'e319e624-4449-4c90-9283-02300dcdd293'
-    }
+      course_uuid: 'e319e624-4449-4c90-9283-02300dcdd293'
+    }.as_json
   end
 end

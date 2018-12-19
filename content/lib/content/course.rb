@@ -4,15 +4,15 @@ module Content
 
     AlreadyCreated = Class.new(StandardError)
 
-    def initialize(uuid)
-      @uuid  = uuid
+    def initialize(course_uuid)
+      @course_uuid  = course_uuid
       @state = Content::CourseState.new(:initialized)
     end
 
     def create
       raise AlreadyCreated if @state.created?
 
-      apply(Content::CourseCreated.new(data: { uuid: @uuid }))
+      apply(Content::CourseCreated.new(data: { course_uuid: @course_uuid }))
     end
 
     on Content::CourseCreated do |_event|
