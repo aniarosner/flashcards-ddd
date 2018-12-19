@@ -2,6 +2,7 @@ AllCops:
   Exclude:
     - bin/**/*
     - db/schema.rb
+    - db/migrate/*
     - vendor/bundle/**/*
     - vendor/cache/**/*
 
@@ -38,4 +39,7 @@ Metrics/ParameterLists:
   Enabled: false
 
 Bundler/OrderedGems:
+  Enabled: false
+
+Style/IndentHash:
   Enabled: false
