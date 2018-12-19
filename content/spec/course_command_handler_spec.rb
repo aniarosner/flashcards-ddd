@@ -10,7 +10,7 @@ module Content
 
     def create_course
       Content::CreateCourse.new(
-        course_uuid: course_english_grammar[:uuid]
+        course_uuid: course_english_grammar[:course_uuid]
       )
     end
 
@@ -20,13 +20,13 @@ module Content
 
     def course_created_data
       {
-        uuid: course_english_grammar[:uuid]
+        course_uuid: course_english_grammar[:course_uuid]
       }
     end
 
     def course_english_grammar
       {
-        uuid: 'e319e624-4449-4c90-9283-02300dcdd293'
+        course_uuid: 'e319e624-4449-4c90-9283-02300dcdd293'
       }
     end
 
