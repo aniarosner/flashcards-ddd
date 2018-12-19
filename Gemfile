@@ -8,6 +8,7 @@ gem 'pg', '~> 1.1', '>= 1.1.3'
 gem 'puma', '~> 3.11'
 gem 'bootsnap', '~> 1.3', '>= 1.3.2'
 gem 'rails_event_store', '~> 0.35.0'
+gem 'classy_hash', '~> 0.2.1'
 
 # UI
 gem 'sass-rails', '~> 5.0'
