@@ -11,7 +11,7 @@ Rails.configuration.to_prepare do
   end
 
   Rails.configuration.event_store.tap do |store|
-    store.subscribe(CourseList::EventHandler.new, to: [Content::CourseCreated])
+    store.subscribe(CourseList::EventHandler.new, to: [Content::CourseCreated, Content::CourseTitleSet])
   end
 
   Rails.configuration.command_bus.tap do |bus|
