@@ -2,7 +2,7 @@ module Content
   class SetCourseTitle
     include Command
 
-    attr_reader :course_uuid # TODO: add validation for uuid format
+    attr_reader :course_uuid
     attr_reader :title
 
     def initialize(course_uuid:, title:)
