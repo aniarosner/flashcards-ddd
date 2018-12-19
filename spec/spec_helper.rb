@@ -7,6 +7,8 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 require 'rspec/rails'
 require 'database_cleaner'
 
+Dir.glob(Rails.root.join('content/spec/**/*_spec.rb')) { |file| require file }
+
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
@@ -21,7 +23,6 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
   config.order = :random
   config.shared_context_metadata_behavior = :apply_to_host_groups
-  config.formatter = :documentation
 
   Kernel.srand(config.seed)
 
