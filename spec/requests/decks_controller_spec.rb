@@ -17,6 +17,13 @@ RSpec.describe DecksController, type: :request do
 
     expect(response).to have_http_status(204)
     expect(response.body).to eq('')
+
+    get "/courses/#{english_grammar[:course_uuid]}/decks",
+        params: { course_uuid: english_grammar[:course_uuid] },
+        headers: { accept: 'application/json' }
+
+    expect(response).to have_http_status(200)
+    expect(JSON.parse(response.body)).to eq([phrasal_verbs.as_json])
   end
 
   def english_grammar

@@ -2,7 +2,7 @@ class DecksController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        render json: [].to_json, status: :ok
+        render json: DeckListReadModel.new.from_course(params[:course_uuid]).to_json, status: :ok
       end
     end
   end
@@ -10,6 +10,8 @@ class DecksController < ApplicationController
   def create
     respond_to do |format|
       format.json do
+        command_bus.call(Content::AddDeckToCourse.new(deck_uuid: params[:deck_uuid], course_uuid: params[:course_uuid]))
+
         head :no_content
       end
     end

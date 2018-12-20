@@ -12,9 +12,13 @@ Rails.configuration.to_prepare do
 
   Rails.configuration.event_store.tap do |store|
     store.subscribe(CourseList::EventHandler.new, to:
-    [
-      Content::CourseCreated, Content::CourseTitleSet, Content::CourseRemoved
-    ])
+      [
+        Content::CourseCreated, Content::CourseTitleSet, Content::CourseRemoved
+      ])
+    store.subscribe(DeckList::EventHandler.new, to:
+      [
+        Content::DeckAddedToCourse
+      ])
   end
 
   Rails.configuration.command_bus.tap do |bus|
