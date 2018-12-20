@@ -19,6 +19,10 @@ Rails.configuration.to_prepare do
       [
         Content::DeckAddedToCourse
       ])
+    store.subscribe(Content::CourseList::EventHandler.new, to:
+      [
+        Content::CourseCreated
+      ])
   end
 
   Rails.configuration.command_bus.tap do |bus|

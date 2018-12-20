@@ -1,10 +1,30 @@
 module Content
   RSpec.describe 'Deck aggregate' do
+    class SuccessCoursePresenceValidator
+      def verify(_course_uuid)
+        true
+      end
+    end
+
+    class FailureCoursePresenceValidator
+      def verify(_course_uuid)
+        false
+      end
+    end
+
     specify 'add deck to course' do
-      deck = Content::Deck.new(deck_phrasal_verbs[:deck_uuid])
+      deck = Content::Deck.new(deck_phrasal_verbs[:deck_uuid], SuccessCoursePresenceValidator.new)
       deck.add_to_course(course_english_grammar[:course_uuid])
 
       expect(deck).to have_applied(deck_added_to_course)
+    end
+
+    specify 'cannot add deck to not created' do
+      deck = Content::Deck.new(deck_phrasal_verbs[:deck_uuid], FailureCoursePresenceValidator.new)
+
+      expect { deck.add_to_course(course_english_grammar[:course_uuid]) }.to(
+        raise_error(Content::Deck::CourseNotCreated)
+      )
     end
 
     private

@@ -2,12 +2,17 @@ module Content
   class Deck
     include AggregateRoot
 
-    def initialize(deck_uuid)
+    CourseNotCreated = Class.new(StandardError)
+
+    def initialize(deck_uuid, course_presence_validator)
       @deck_uuid = deck_uuid
       @state = Content::DeckState.new(:initialized)
+      @course_presence_validator = course_presence_validator
     end
 
     def add_to_course(course_uuid)
+      raise CourseNotCreated unless @course_presence_validator.verify(course_uuid)
+
       apply(Content::DeckAddedToCourse.new(data: { deck_uuid: @deck_uuid, course_uuid: course_uuid }))
     end
 

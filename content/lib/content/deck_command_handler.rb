@@ -3,6 +3,7 @@ module Content
     def initialize
       @event_store = Rails.configuration.event_store
       @command_bus = Rails.configuration.command_bus
+      @course_presence_validator = Content::CoursePresenceValidator.new
     end
 
     def add_deck_to_course(cmd)
@@ -16,7 +17,7 @@ module Content
     private
 
     def with_deck(deck_uuid)
-      Content::Deck.new(deck_uuid).tap do |deck|
+      Content::Deck.new(deck_uuid, @course_presence_validator).tap do |deck|
         load_deck(deck_uuid, deck)
         yield deck
         store_deck(deck)
