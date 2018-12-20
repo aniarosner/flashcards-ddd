@@ -19,7 +19,16 @@ module Content
       expect(deck).to have_applied(deck_added_to_course)
     end
 
-    specify 'cannot add deck to not created' do
+    specify 'cannot add deck twice' do
+      deck = Content::Deck.new(deck_phrasal_verbs[:deck_uuid], SuccessCoursePresenceValidator.new)
+      deck.add_to_course(course_english_grammar[:course_uuid])
+
+      expect { deck.add_to_course(course_english_grammar[:course_uuid]) }.to(
+        raise_error(Content::Deck::AlreadyAddedToCourse)
+      )
+    end
+
+    specify 'cannot add deck to not created course' do
       deck = Content::Deck.new(deck_phrasal_verbs[:deck_uuid], FailureCoursePresenceValidator.new)
 
       expect { deck.add_to_course(course_english_grammar[:course_uuid]) }.to(
