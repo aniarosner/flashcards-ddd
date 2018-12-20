@@ -3,7 +3,7 @@ module Content
     include Comparable
     InvalidFormat = Class.new(StandardError)
 
-    def initialize(front:, back:)
+    def initialize(front, back)
       raise InvalidFormat unless front.class == String && back.class == String
 
       @front = front
@@ -17,11 +17,11 @@ module Content
     end
 
     def front
-      front
+      @front.to_s
     end
 
     def back
-      back
+      @back.to_s
     end
   end
 end

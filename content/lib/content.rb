@@ -1,6 +1,5 @@
 module Content
 end
-
 require_dependency 'content/commands/add_deck_to_course.rb'
 require_dependency 'content/commands/create_course.rb'
 require_dependency 'content/commands/remove_course.rb'
@@ -16,3 +15,5 @@ require_dependency 'content/domain_services/course_presence_validator.rb'
 require_dependency 'content/read_models/course_list/course.rb'
 require_dependency 'content/read_models/course_list/event_handler.rb'
 require_dependency 'content/read_models/course_list_read_model.rb'
+
+require_dependency 'content/card.rb'
