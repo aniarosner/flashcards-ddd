@@ -7,8 +7,6 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 require 'rspec/rails'
 require 'database_cleaner'
 
-Dir.glob(Rails.root.join('content/spec/**/*_spec.rb')) { |file| require file }
-
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
