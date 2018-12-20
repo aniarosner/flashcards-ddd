@@ -1,3 +1,4 @@
+# TODO: add missing specs
 module Content
   RSpec.describe 'Course aggregate' do
     specify 'create new course' do
@@ -5,6 +6,13 @@ module Content
       course.create
 
       expect(course).to have_applied(course_created)
+    end
+
+    specify 'course cannot be created twice' do
+      course = Content::Course.new(course_english_grammar[:course_uuid])
+      course.create
+
+      expect { course.create }.to(raise_error(Content::Course::AlreadyCreated))
     end
 
     specify 'set course title' do

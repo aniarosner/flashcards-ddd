@@ -12,12 +12,14 @@ module Content
     end
 
     def create
+      # TODO: add validation for removed state
       raise AlreadyCreated if @state.created?
 
       apply(Content::CourseCreated.new(data: { course_uuid: @course_uuid }))
     end
 
     def set_title(title)
+      # TODO: add validation for removed state
       raise NotCreated unless @state.created?
 
       apply(Content::CourseTitleSet.new(data: { course_uuid: @course_uuid, title: title }))
