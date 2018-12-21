@@ -22,7 +22,7 @@ Rails.configuration.to_prepare do
       ])
     store.subscribe(Cards::EventHandler.new, to:
       [
-        Content::CardAddedToDeck
+        Content::CardAddedToDeck, Content::CardRemovedFromDeck
       ])
     # CONTENT
     store.subscribe(Content::Courses::EventHandler.new, to:

@@ -5,6 +5,8 @@ module Cards
       case domain_event
       when Content::CardAddedToDeck
         create_card(data[:deck_uuid], data[:front], data[:back])
+      when Content::CardRemovedFromDeck
+        remove_card(data[:deck_uuid], data[:front], data[:back])
       end
     end
 
@@ -16,6 +18,11 @@ module Cards
         front: front,
         back: back
       )
+    end
+
+    def remove_card(deck_uuid, front, back)
+      card = Cards::Card.find_by(deck_uuid: deck_uuid, front: front, back: back)
+      card.destroy!
     end
   end
 end
