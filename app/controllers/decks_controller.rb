@@ -41,6 +41,12 @@ class DecksController < ApplicationController
       format.json do
         render json: Cards::ReadModel.new.from_deck(params[:deck_uuid]).as_json(except: :deck_uuid), status: :ok
       end
+      format.html do
+        render action: :cards, locals: {
+          deck: Decks::ReadModel.new.find(params[:deck_uuid]),
+          cards: Cards::ReadModel.new.from_deck(params[:deck_uuid])
+        }
+      end
     end
   end
 

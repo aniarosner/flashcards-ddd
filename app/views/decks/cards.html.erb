@@ -1,0 +1,6 @@
+<h1>Deck: <%= deck.title %> </h1>
+<ul>
+  <% cards.each do |card| %>
+    <li><b><%= card.front %></b> - <%= card.back %></li>
+  <% end %>
+</ul>
