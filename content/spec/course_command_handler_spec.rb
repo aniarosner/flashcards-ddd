@@ -25,37 +25,37 @@ module Content
 
     def create_course
       Content::CreateCourse.new(
-        course_uuid: course_english_grammar[:course_uuid]
+        course_uuid: english_grammar[:course_uuid]
       )
     end
 
     def set_course_title
       Content::SetCourseTitle.new(
-        course_uuid: course_english_grammar[:course_uuid],
-        title: course_english_grammar[:title]
+        course_uuid: english_grammar[:course_uuid],
+        title: english_grammar[:title]
       )
     end
 
     def course_created
       an_event(Content::CourseCreated).with_data(
-        course_uuid: course_english_grammar[:course_uuid]
+        course_uuid: english_grammar[:course_uuid]
       ).strict
     end
 
     def course_removed
       an_event(Content::CourseRemoved).with_data(
-        course_uuid: course_english_grammar[:course_uuid]
+        course_uuid: english_grammar[:course_uuid]
       ).strict
     end
 
     def course_title_set
       an_event(Content::CourseTitleSet).with_data(
-        course_uuid: course_english_grammar[:course_uuid],
-        title: course_english_grammar[:title]
+        course_uuid: english_grammar[:course_uuid],
+        title: english_grammar[:title]
       ).strict
     end
 
-    def course_english_grammar
+    def english_grammar
       {
         course_uuid: 'e319e624-4449-4c90-9283-02300dcdd293',
         title: 'English Grammar'

@@ -28,70 +28,70 @@ module Content
 
     def create_course
       Content::CreateCourse.new(
-        course_uuid: course_english_grammar[:course_uuid]
+        course_uuid: english_grammar[:course_uuid]
       )
     end
 
     def create_deck_in_course
       Content::CreateDeckInCourse.new(
-        course_uuid: course_english_grammar[:course_uuid],
-        deck_uuid: deck_phrasal_verbs[:deck_uuid]
+        course_uuid: english_grammar[:course_uuid],
+        deck_uuid: phrasal_verbs[:deck_uuid]
       )
     end
 
     def add_card_to_deck
       Content::AddCardToDeck.new(
-        deck_uuid: deck_phrasal_verbs[:deck_uuid],
-        front: card_look_forward_to[:front],
-        back: card_look_forward_to[:back]
+        deck_uuid: phrasal_verbs[:deck_uuid],
+        front: look_forward_to[:front],
+        back: look_forward_to[:back]
       )
     end
 
     def remove_card_from_deck
       Content::RemoveCardFromDeck.new(
-        deck_uuid: deck_phrasal_verbs[:deck_uuid],
-        front: card_look_forward_to[:front],
-        back: card_look_forward_to[:back]
+        deck_uuid: phrasal_verbs[:deck_uuid],
+        front: look_forward_to[:front],
+        back: look_forward_to[:back]
       )
     end
 
     def deck_created_in_course
       an_event(Content::DeckCreatedInCourse).with_data(
-        course_uuid: course_english_grammar[:course_uuid],
-        deck_uuid: deck_phrasal_verbs[:deck_uuid]
+        course_uuid: english_grammar[:course_uuid],
+        deck_uuid: phrasal_verbs[:deck_uuid]
       ).strict
     end
 
     def card_added_to_deck
       an_event(Content::CardAddedToDeck).with_data(
-        deck_uuid: deck_phrasal_verbs[:deck_uuid],
-        front: card_look_forward_to[:front],
-        back: card_look_forward_to[:back]
+        deck_uuid: phrasal_verbs[:deck_uuid],
+        front: look_forward_to[:front],
+        back: look_forward_to[:back]
       ).strict
     end
 
     def card_removed_from_deck
       an_event(Content::CardRemovedFromDeck).with_data(
-        deck_uuid: deck_phrasal_verbs[:deck_uuid],
-        front: card_look_forward_to[:front],
-        back: card_look_forward_to[:back]
+        deck_uuid: phrasal_verbs[:deck_uuid],
+        front: look_forward_to[:front],
+        back: look_forward_to[:back]
       ).strict
     end
 
-    def course_english_grammar
+    def english_grammar
       {
         course_uuid: 'e319e624-4449-4c90-9283-02300dcdd293',
         title: 'English Grammar'
       }
     end
 
-    def deck_phrasal_verbs
+    def phrasal_verbs
       {
         deck_uuid: '856a739c-e18c-4831-8958-695feccd2d73'
       }
     end
 
-    def card_look_forward_to
+    def look_forward_to
       {
         front: 'Look forward to',
         back: 'To be pleased about sth that is going to happen'
