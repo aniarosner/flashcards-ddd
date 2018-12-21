@@ -1,6 +1,6 @@
 <h1>Courses</h1>
 <ul>
   <% courses.each do |course| %>
-    <li><%= link_to course.title, course_decks_path(course.course_uuid) %></li>
+    <li><%= link_to(course.title, course_decks_path(course.course_uuid)) %></li>
   <% end %>
 </ul>

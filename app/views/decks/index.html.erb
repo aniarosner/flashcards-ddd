@@ -1,0 +1,6 @@
+<h1>Course: <%= course.title %> </h1>
+<ul>
+  <% decks.each do |deck| %>
+    <li><%= link_to(deck.title, cards_deck_path(deck.deck_uuid)) %></li>
+  <% end %>
+</ul>

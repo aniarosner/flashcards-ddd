@@ -14,6 +14,7 @@ command_bus.call(
 command_bus.call(
   Content::CreateDeckInCourse.new(deck_uuid: phrasal_verbs[:deck_uuid], course_uuid: english_grammar[:course_uuid])
 )
+command_bus.call(Content::SetDeckTitle.new(deck_uuid: phrasal_verbs[:deck_uuid], title: phrasal_verbs[:title]))
 command_bus.call(
   Content::AddCardToDeck.new(deck_uuid: phrasal_verbs[:deck_uuid], front: look_forward_to[:front], back: look_forward_to[:back])
 )
