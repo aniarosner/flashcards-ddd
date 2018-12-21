@@ -1,7 +1,9 @@
 <h1>Deck: <%= deck.title %> </h1>
 <ul>
   <% cards.each do |card| %>
-    <li><b><%= card.front %></b> - <%= card.back %> <%= link_to('Remove', remove_card_deck_path(deck_uuid: deck.deck_uuid, front: card.front, back: card.back), method: :delete)%></li>
+    <li><b><%= card.front %></b> - <%= card.back %> <%= link_to(
+      'Remove', remove_card_deck_path(deck_uuid: deck.deck_uuid, front: card.front, back: card.back
+    ), method: :delete)%></li>
   <% end %>
 </ul>
 
