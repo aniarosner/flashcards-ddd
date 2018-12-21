@@ -13,6 +13,7 @@ class DecksController < ApplicationController
         command_bus.call(
           Content::CreateDeckInCourse.new(deck_uuid: params[:deck_uuid], course_uuid: params[:course_uuid])
         )
+        command_bus.call(Content::SetDeckTitle.new(deck_uuid: params[:deck_uuid], title: params[:title]))
 
         head :no_content
       end
