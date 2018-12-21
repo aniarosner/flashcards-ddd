@@ -1,7 +1,9 @@
 <h1>Course: <%= course.title %> </h1>
 <ul>
   <% decks.each do |deck| %>
-    <li><%= link_to(deck.title, cards_deck_path(deck.deck_uuid)) %></li>
+    <li><%= link_to(deck.title, cards_course_deck_path(deck_uuid: deck.deck_uuid)) %> <%= link_to(
+      'Remove', course_deck_path(deck_uuid: deck.deck_uuid, course_uuid: course.course_uuid
+    ), method: :delete)%></li>
   <% end %>
 </ul>
 

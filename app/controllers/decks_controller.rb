@@ -35,11 +35,9 @@ class DecksController < ApplicationController
 
   def destroy
     respond_to do |format|
-      format.json do
-        command_bus.call(Content::RemoveDeck.new(deck_uuid: params[:deck_uuid], course_uuid: params[:course_uuid]))
-
-        head :no_content
-      end
+      command_bus.call(Content::RemoveDeck.new(deck_uuid: params[:deck_uuid], course_uuid: params[:course_uuid]))
+      format.json { head :no_content }
+      format.html { redirect_to course_decks_path }
     end
   end
 
@@ -63,7 +61,7 @@ class DecksController < ApplicationController
         Content::AddCardToDeck.new(deck_uuid: params[:deck_uuid], front: params[:front], back: params[:back])
       )
       format.json { head :no_content }
-      format.html { redirect_to cards_deck_path }
+      format.html { redirect_to cards_course_deck_path }
     end
   end
 
@@ -79,7 +77,7 @@ class DecksController < ApplicationController
     )
     respond_to do |format|
       format.json { head :no_content }
-      format.html { redirect_to cards_deck_path }
+      format.html { redirect_to cards_course_deck_path }
     end
   end
 end

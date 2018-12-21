@@ -2,10 +2,10 @@
 <ul>
   <% cards.each do |card| %>
     <li><b><%= card.front %></b> - <%= card.back %> <%= link_to(
-      'Remove', remove_card_deck_path(deck_uuid: deck.deck_uuid, front: card.front, back: card.back
+      'Remove', remove_card_course_deck_path(deck_uuid: deck.deck_uuid, front: card.front, back: card.back
     ), method: :delete)%></li>
   <% end %>
 </ul>
 
-<%= link_to('Add new card', new_card_deck_path(deck.deck_uuid)) %>
+<%= link_to('Add new card', new_card_course_deck_path(deck.deck_uuid)) %>
 <%= link_to('Back', course_decks_path(deck.course_uuid)) %>
