@@ -21,6 +21,6 @@ require_dependency 'content/deck_aggregate/deck.rb'
 
 require_dependency 'content/domain_services/course_presence_validator.rb'
 
-require_dependency 'content/read_models/course_list/course.rb'
-require_dependency 'content/read_models/course_list/event_handler.rb'
-require_dependency 'content/read_models/course_list_read_model.rb'
+require_dependency 'content/read_models/courses/course.rb'
+require_dependency 'content/read_models/courses/event_handler.rb'
+require_dependency 'content/read_models/courses/read_model.rb'
