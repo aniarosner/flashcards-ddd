@@ -1,5 +1,5 @@
 module Content
-  RSpec.describe 'CommandHandler' do
+  RSpec.describe 'CourseCommandHandler' do
     specify 'create a course' do
       Content::CourseCommandHandler.new.create_course(create_course)
 
