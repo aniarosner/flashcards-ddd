@@ -5,6 +5,6 @@ Rails.application.routes.draw do
 
   resources :decks, only: [] do
     get :cards, on: :member
-    resources :cards, only: %i[create]
+    post :add_card, on: :member
   end
 end
