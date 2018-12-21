@@ -4,3 +4,6 @@
     <li><b><%= card.front %></b> - <%= card.back %></li>
   <% end %>
 </ul>
+
+<%= link_to('Add new card', new_card_deck_path(deck.deck_uuid)) %>
+<%= link_to('Back', course_decks_path(deck.course_uuid)) %>

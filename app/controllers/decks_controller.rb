@@ -63,6 +63,13 @@ class DecksController < ApplicationController
         Content::AddCardToDeck.new(deck_uuid: params[:deck_uuid], front: params[:front], back: params[:back])
       )
       format.json { head :no_content }
+      format.html { redirect_to cards_deck_path }
+    end
+  end
+
+  def new_card
+    respond_to do |format|
+      format.html { render action: :new_card, locals: { deck_uuid: params[:deck_uuid] } }
     end
   end
 

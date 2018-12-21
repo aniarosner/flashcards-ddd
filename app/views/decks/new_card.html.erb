@@ -1,0 +1,18 @@
+<h1>New Card</h1>
+<%= form_tag({ controller: 'decks', action: 'add_card' }, method: 'post') do %>
+  <%= hidden_field_tag(:deck_uuid, deck_uuid) %>
+
+  <div>
+    <%= label_tag(:front) %>
+    <%= text_field_tag(:front, '', class: 'form-control') %>
+  </div>
+  <div>
+    <%= label_tag(:back) %>
+    <%= text_field_tag(:back, '', class: 'form-control') %>
+  </div>
+
+  </br>
+
+  <%= submit_tag('Create') %>
+  <%= link_to 'Back', courses_path %>
+<% end %>

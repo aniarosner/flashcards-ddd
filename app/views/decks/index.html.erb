@@ -5,4 +5,5 @@
   <% end %>
 </ul>
 
-<%= link_to('Create new deck', new_course_deck_path) %>
+<%= link_to('Create new deck', new_course_deck_path(course.course_uuid)) %>
+<%= link_to('Back', courses_path) %>
