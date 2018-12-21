@@ -7,8 +7,6 @@ module Decks
         create_deck_in_course(data[:deck_uuid], data[:course_uuid])
       when Content::DeckRemoved
         remove_deck(data[:deck_uuid])
-      when Content::CourseRemoved
-        remove_all_decks_from_course(data[:course_uuid])
       end
     end
 
@@ -24,11 +22,6 @@ module Decks
     def remove_deck(deck_uuid)
       deck = Decks::Deck.find_by(deck_uuid: deck_uuid)
       deck.destroy
-    end
-
-    def remove_all_decks_from_course(course_uuid)
-      decks = Decks::Deck.where(course_uuid: course_uuid)
-      decks.destroy_all
     end
   end
 end
