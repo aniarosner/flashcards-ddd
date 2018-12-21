@@ -8,12 +8,19 @@ class CoursesController < ApplicationController
 
   def create
     respond_to do |format|
-      format.json do
-        command_bus.call(Content::CreateCourse.new(course_uuid: params[:course_uuid]))
-        command_bus.call(Content::SetCourseTitle.new(course_uuid: params[:course_uuid], title: params[:title]))
+      command_bus.call(Content::CreateCourse.new(course_uuid: params[:course_uuid]))
+      command_bus.call(Content::SetCourseTitle.new(course_uuid: params[:course_uuid], title: params[:title]))
 
-        head :no_content
-      end
+      format.json { head :no_content }
+      format.html { redirect_to courses_path }
+    end
+  end
+
+  def new
+    course_uuid = SecureRandom.uuid
+
+    respond_to do |format|
+      format.html { render action: :new, locals: { course_uuid: course_uuid } }
     end
   end
 

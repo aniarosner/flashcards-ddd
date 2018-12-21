@@ -4,3 +4,5 @@
     <li><%= link_to(course.title, course_decks_path(course.course_uuid)) %></li>
   <% end %>
 </ul>
+
+<%= link_to('Create new course', new_course_path) %>
