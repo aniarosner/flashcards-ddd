@@ -15,14 +15,21 @@ class DecksController < ApplicationController
 
   def create
     respond_to do |format|
-      format.json do
-        command_bus.call(
-          Content::CreateDeckInCourse.new(deck_uuid: params[:deck_uuid], course_uuid: params[:course_uuid])
-        )
-        command_bus.call(Content::SetDeckTitle.new(deck_uuid: params[:deck_uuid], title: params[:title]))
+      command_bus.call(
+        Content::CreateDeckInCourse.new(deck_uuid: params[:deck_uuid], course_uuid: params[:course_uuid])
+      )
+      command_bus.call(Content::SetDeckTitle.new(deck_uuid: params[:deck_uuid], title: params[:title]))
 
-        head :no_content
-      end
+      format.json { head :no_content }
+      format.html { redirect_to course_decks_path }
+    end
+  end
+
+  def new
+    deck_uuid = SecureRandom.uuid
+
+    respond_to do |format|
+      format.html { render action: :new, locals: { deck_uuid: deck_uuid } }
     end
   end
 

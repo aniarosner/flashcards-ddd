@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   root 'courses#index'
 
   resources :courses, only: %i[index create new destroy], param: :uuid do
-    resources :decks, only: %i[index create destroy], param: :uuid
+    resources :decks, only: %i[index create new destroy], param: :uuid
   end
 
   resources :decks, only: [], param: :deck_uuid do
