@@ -46,7 +46,7 @@ class DecksController < ApplicationController
   def cards
     respond_to do |format|
       format.json do
-        render json: Cards::ReadModel.new.from_deck(params[:deck_uuid]).as_json(except: :deck_uuid), status: :ok
+        render json: Cards::ReadModel.new.from_deck(params[:deck_uuid]).as_json(except: %i[deck_uuid uuid]), status: :ok
       end
       format.html do
         render action: :cards, locals: {
@@ -74,11 +74,12 @@ class DecksController < ApplicationController
   end
 
   def remove_card
+    command_bus.call(
+      Content::RemoveCardFromDeck.new(deck_uuid: params[:deck_uuid], front: params[:front], back: params[:back])
+    )
     respond_to do |format|
-      command_bus.call(
-        Content::RemoveCardFromDeck.new(deck_uuid: params[:deck_uuid], front: params[:front], back: params[:back])
-      )
       format.json { head :no_content }
+      format.html { redirect_to cards_deck_path }
     end
   end
 end
