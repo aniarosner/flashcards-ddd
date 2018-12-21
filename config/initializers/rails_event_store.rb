@@ -15,7 +15,7 @@ Rails.configuration.to_prepare do
       [
         Content::CourseCreated, Content::CourseTitleSet, Content::CourseRemoved
       ])
-    store.subscribe(DeckList::EventHandler.new, to:
+    store.subscribe(Decks::EventHandler.new, to:
       [
         Content::DeckAddedToCourse
       ])

@@ -2,7 +2,7 @@ class DecksController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        render json: DeckListReadModel.new.from_course(params[:course_uuid]).as_json(except: :course_uuid), status: :ok
+        render json: Decks::ReadModel.new.from_course(params[:course_uuid]).as_json(except: :course_uuid), status: :ok
       end
     end
   end
