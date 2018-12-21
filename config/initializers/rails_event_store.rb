@@ -26,8 +26,8 @@ Rails.configuration.to_prepare do
       ])
     # CONTENT
     store.subscribe(Content::Courses::EventHandler.new, to:
-      [ # TODO: add Content::CourseRemoved
-        Content::CourseCreated
+      [
+        Content::CourseCreated, Content::CourseRemoved
       ])
   end
 
