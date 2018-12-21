@@ -1,12 +1,4 @@
 RSpec.describe CardsController, type: :request do
-  specify 'empty deck' do
-    get "/decks/#{phrasal_verbs[:deck_uuid]}/cards",
-        params: { deck_uuid: phrasal_verbs[:deck_uuid] },
-        headers: { accept: 'application/json' }
-    expect(response).to have_http_status(200)
-    expect(JSON.parse(response.body)).to eq([])
-  end
-
   specify 'add card to deck' do
     # NOTE: course should be created first
     post "/decks/#{phrasal_verbs[:deck_uuid]}/cards",

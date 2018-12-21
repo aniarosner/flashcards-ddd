@@ -26,6 +26,14 @@ RSpec.describe DecksController, type: :request do
     expect(JSON.parse(response.body)).to eq([phrasal_verbs.as_json])
   end
 
+  specify 'show empty deck' do
+    get "/decks/#{phrasal_verbs[:deck_uuid]}/cards",
+        params: { deck_uuid: phrasal_verbs[:deck_uuid] },
+        headers: { accept: 'application/json' }
+    expect(response).to have_http_status(200)
+    expect(JSON.parse(response.body)).to eq([])
+  end
+
   def english_grammar
     {
       course_uuid: 'e319e624-4449-4c90-9283-02300dcdd293',

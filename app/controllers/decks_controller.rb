@@ -16,4 +16,12 @@ class DecksController < ApplicationController
       end
     end
   end
+
+  def cards
+    respond_to do |format|
+      format.json do
+        render json: Cards::ReadModel.new.from_deck(params[:deck_uuid]).as_json(except: :deck_uuid), status: :ok
+      end
+    end
+  end
 end
