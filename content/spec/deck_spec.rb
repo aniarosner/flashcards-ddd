@@ -44,6 +44,15 @@ module Content
       expect(deck).to have_applied(deck_added_to_course, card_added_to_deck)
     end
 
+    specify 'remove card from deck' do
+      deck = Content::Deck.new(deck_phrasal_verbs[:deck_uuid], SuccessCoursePresenceValidator.new)
+      deck.add_to_course(course_english_grammar[:course_uuid])
+      deck.add_card(Content::Card.new(card_look_forward_to[:front], card_look_forward_to[:back]))
+      deck.remove_card(Content::Card.new(card_look_forward_to[:front], card_look_forward_to[:back]))
+
+      expect(deck).to have_applied(deck_added_to_course, card_added_to_deck, card_removed_from_deck)
+    end
+
     private
 
     def deck_added_to_course
@@ -55,6 +64,14 @@ module Content
 
     def card_added_to_deck
       an_event(Content::CardAddedToDeck).with_data(
+        deck_uuid: deck_phrasal_verbs[:deck_uuid],
+        front: card_look_forward_to[:front],
+        back: card_look_forward_to[:back]
+      ).strict
+    end
+
+    def card_removed_from_deck
+      an_event(Content::CardRemovedFromDeck).with_data(
         deck_uuid: deck_phrasal_verbs[:deck_uuid],
         front: card_look_forward_to[:front],
         back: card_look_forward_to[:back]

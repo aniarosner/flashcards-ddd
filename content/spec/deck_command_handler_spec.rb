@@ -15,6 +15,15 @@ module Content
       expect(event_store).to have_published(deck_added_to_course, card_added_to_deck)
     end
 
+    specify 'remove card from deck' do
+      Content::CourseCommandHandler.new.create_course(create_course)
+      Content::DeckCommandHandler.new.add_deck_to_course(add_deck_to_course)
+      Content::DeckCommandHandler.new.add_card_to_deck(add_card_to_deck)
+      Content::DeckCommandHandler.new.remove_card_from_deck(remove_card_from_deck)
+
+      expect(event_store).to have_published(deck_added_to_course, card_added_to_deck)
+    end
+
     private
 
     def create_course
@@ -38,6 +47,14 @@ module Content
       )
     end
 
+    def remove_card_from_deck
+      Content::RemoveCardFromDeck.new(
+        deck_uuid: deck_phrasal_verbs[:deck_uuid],
+        front: card_look_forward_to[:front],
+        back: card_look_forward_to[:back]
+      )
+    end
+
     def deck_added_to_course
       an_event(Content::DeckAddedToCourse).with_data(
         course_uuid: course_english_grammar[:course_uuid],
@@ -47,6 +64,14 @@ module Content
 
     def card_added_to_deck
       an_event(Content::CardAddedToDeck).with_data(
+        deck_uuid: deck_phrasal_verbs[:deck_uuid],
+        front: card_look_forward_to[:front],
+        back: card_look_forward_to[:back]
+      ).strict
+    end
+
+    def card_removed_from_deck
+      an_event(Content::CardRemovedFromDeck).with_data(
         deck_uuid: deck_phrasal_verbs[:deck_uuid],
         front: card_look_forward_to[:front],
         back: card_look_forward_to[:back]

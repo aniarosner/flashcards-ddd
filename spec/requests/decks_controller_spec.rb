@@ -49,6 +49,27 @@ RSpec.describe DecksController, type: :request do
     expect(JSON.parse(response.body)).to eq([look_forward_to.as_json])
   end
 
+  specify 'remove card from deck' do
+    # NOTE: course should be created first
+    post "/decks/#{phrasal_verbs[:deck_uuid]}/add_card",
+         params: { deck_uuid: phrasal_verbs[:deck_uuid], front: look_forward_to[:front], back: look_forward_to[:back] },
+         headers: { accept: 'application/json' }
+    expect(response).to have_http_status(204)
+    expect(response.body).to eq('')
+
+    delete "/decks/#{phrasal_verbs[:deck_uuid]}/remove_card", params: {
+      deck_uuid: phrasal_verbs[:deck_uuid], front: look_forward_to[:front], back: look_forward_to[:back]
+    }, headers: { accept: 'application/json' }
+    expect(response).to have_http_status(204)
+    expect(response.body).to eq('')
+
+    get "/decks/#{phrasal_verbs[:deck_uuid]}/cards",
+        params: { deck_uuid: phrasal_verbs[:deck_uuid] },
+        headers: { accept: 'application/json' }
+    expect(response).to have_http_status(200)
+    expect(JSON.parse(response.body)).to eq([])
+  end
+
   def english_grammar
     {
       course_uuid: 'e319e624-4449-4c90-9283-02300dcdd293',
