@@ -1,5 +1,5 @@
 module Content
-  module CourseList
+  module Courses
     class EventHandler
       def call(domain_event)
         data = domain_event.data
@@ -14,13 +14,13 @@ module Content
       private
 
       def create_course(course_uuid)
-        Content::CourseList::Course.create!(
+        Content::Courses::Course.create!(
           course_uuid: course_uuid
         )
       end
 
       def remove_course(course_uuid)
-        course = Content::CourseList::Course.find_by(course_uuid: course_uuid)
+        course = Content::Courses::Course.find_by(course_uuid: course_uuid)
         course.destroy!
       end
     end

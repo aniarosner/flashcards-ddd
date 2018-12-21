@@ -11,7 +11,7 @@ Rails.configuration.to_prepare do
   end
 
   Rails.configuration.event_store.tap do |store|
-    store.subscribe(CourseList::EventHandler.new, to:
+    store.subscribe(Courses::EventHandler.new, to:
       [
         Content::CourseCreated, Content::CourseTitleSet, Content::CourseRemoved
       ])
@@ -19,7 +19,7 @@ Rails.configuration.to_prepare do
       [
         Content::DeckAddedToCourse
       ])
-    store.subscribe(Content::CourseList::EventHandler.new, to:
+    store.subscribe(Content::Courses::EventHandler.new, to:
       [
         Content::CourseCreated
       ])

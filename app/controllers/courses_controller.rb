@@ -1,7 +1,7 @@
 class CoursesController < ApplicationController
   def index
     respond_to do |format|
-      format.json { render json: CourseListReadModel.new.all, status: :ok }
+      format.json { render json: Courses::ReadModel.new.all, status: :ok }
     end
   end
 

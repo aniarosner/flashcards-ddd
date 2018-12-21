@@ -1,5 +1,5 @@
 module Content
-  module CourseList
+  module Courses
     class Course < ApplicationRecord
       self.table_name = 'content_course_list_courses'
     end

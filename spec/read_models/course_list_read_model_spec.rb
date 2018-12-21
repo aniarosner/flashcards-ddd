@@ -1,4 +1,4 @@
-RSpec.describe CourseListReadModel do
+RSpec.describe Courses::ReadModel do
   specify 'creates course with title' do
     course_list_event_handler.call(course_created)
     course_list_event_handler.call(course_title_set)
@@ -41,11 +41,11 @@ RSpec.describe CourseListReadModel do
   end
 
   def course_list_event_handler
-    @course_list_event_handler ||= CourseList::EventHandler.new
+    @course_list_event_handler ||= Courses::EventHandler.new
   end
 
   def course_list_read_model
-    @course_list_read_model ||= CourseListReadModel.new
+    @course_list_read_model ||= Courses::ReadModel.new
   end
 
   def english_grammar
