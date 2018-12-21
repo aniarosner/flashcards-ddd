@@ -55,7 +55,10 @@ RSpec.describe DecksController, type: :request do
   end
 
   specify 'add card to deck' do
-    # NOTE: course should be created first
+    post '/courses', params: english_grammar, headers: { accept: 'application/json' }
+    post "/courses/#{english_grammar[:course_uuid]}/decks",
+         params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid] },
+         headers: { accept: 'application/json' }
     post "/decks/#{phrasal_verbs[:deck_uuid]}/add_card",
          params: { deck_uuid: phrasal_verbs[:deck_uuid], front: look_forward_to[:front], back: look_forward_to[:back] },
          headers: { accept: 'application/json' }
@@ -70,7 +73,10 @@ RSpec.describe DecksController, type: :request do
   end
 
   specify 'remove card from deck' do
-    # NOTE: course should be created first
+    post '/courses', params: english_grammar, headers: { accept: 'application/json' }
+    post "/courses/#{english_grammar[:course_uuid]}/decks",
+         params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid] },
+         headers: { accept: 'application/json' }
     post "/decks/#{phrasal_verbs[:deck_uuid]}/add_card",
          params: { deck_uuid: phrasal_verbs[:deck_uuid], front: look_forward_to[:front], back: look_forward_to[:back] },
          headers: { accept: 'application/json' }

@@ -24,7 +24,7 @@ module Content
       deck.create_in_course(english_grammar[:course_uuid])
 
       expect { deck.create_in_course(english_grammar[:course_uuid]) }.to(
-        raise_error(Content::Deck::AlreadyCreatedInCourse)
+        raise_error(Content::Deck::AlreadyCreated)
       )
     end
 
