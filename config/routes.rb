@@ -4,6 +4,6 @@ Rails.application.routes.draw do
   end
 
   resources :decks, only: [] do
-    resources :cards, only: %i[index]
+    resources :cards, only: %i[index create]
   end
 end
