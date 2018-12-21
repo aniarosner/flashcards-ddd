@@ -9,6 +9,10 @@ module Content
       @state = state
     end
 
+    def initialized?
+      @state == :initialized
+    end
+
     def created?
       @state == :created
     end

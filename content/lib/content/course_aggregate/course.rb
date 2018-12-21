@@ -2,9 +2,9 @@ module Content
   class Course
     include AggregateRoot
 
-    AlreadyCreated  = Class.new(StandardError)
-    NotCreated      = Class.new(StandardError)
-    AlreadyRemoved  = Class.new(StandardError)
+    AlreadyCreated = Class.new(StandardError)
+    NotCreated = Class.new(StandardError)
+    Removed = Class.new(StandardError)
 
     def initialize(course_uuid)
       @course_uuid = course_uuid
@@ -12,14 +12,14 @@ module Content
     end
 
     def create
-      # TODO: add validation for removed state
-      raise AlreadyCreated if @state.created?
+      raise AlreadyCreated if @state.created? || @state.removed?
 
       apply(Content::CourseCreated.new(data: { course_uuid: @course_uuid }))
     end
 
     def set_title(title)
-      # TODO: add validation for removed state
+      raise NotCreated if @state.initialized?
+      raise Removed if @state.removed?
       raise NotCreated unless @state.created?
 
       apply(Content::CourseTitleSet.new(data: { course_uuid: @course_uuid, title: title }))
