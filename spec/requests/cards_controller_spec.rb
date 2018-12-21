@@ -8,6 +8,7 @@ RSpec.describe CardsController, type: :request do
   end
 
   specify 'add card to deck' do
+    # NOTE: course should be created first
     post "/decks/#{phrasal_verbs[:deck_uuid]}/cards",
          params: { deck_uuid: phrasal_verbs[:deck_uuid], front: look_forward_to[:front], back: look_forward_to[:back] },
          headers: { accept: 'application/json' }

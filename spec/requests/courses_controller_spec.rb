@@ -28,6 +28,8 @@ RSpec.describe CoursesController, type: :request do
     expect(JSON.parse(response.body)).to eq([])
   end
 
+  # TODO: add test that checks course's decks after removal
+
   def english_grammar
     {
       course_uuid: 'e319e624-4449-4c90-9283-02300dcdd293',
