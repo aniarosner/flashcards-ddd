@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root 'courses#index'
+
   resources :courses, only: %i[index create destroy] do
     resources :decks, only: %i[index create destroy]
   end
