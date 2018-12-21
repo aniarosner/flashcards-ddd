@@ -23,6 +23,10 @@ Rails.configuration.to_prepare do
       [
         Content::CourseCreated
       ])
+    store.subscribe(Cards::EventHandler.new, to:
+      [
+        Content::CardAddedToDeck
+      ])
   end
 
   Rails.configuration.command_bus.tap do |bus|

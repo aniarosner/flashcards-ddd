@@ -10,11 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_20_004305) do
+ActiveRecord::Schema.define(version: 2018_12_21_011303) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "cards_cards", primary_key: "deck_uuid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "front", null: false
+    t.string "back", null: false
+  end
 
   create_table "content_course_list_courses", primary_key: "course_uuid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
   end
