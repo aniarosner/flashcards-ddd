@@ -5,7 +5,6 @@ class DecksController < ApplicationController
         render json: Decks::ReadModel.new.from_course(params[:course_uuid]).as_json(except: :course_uuid), status: :ok
       end
       format.html do
-        binding.pry
         render action: :index, locals: {
           course: Courses::ReadModel.new.find(params[:course_uuid]),
           decks: Decks::ReadModel.new.from_course(params[:course_uuid])
