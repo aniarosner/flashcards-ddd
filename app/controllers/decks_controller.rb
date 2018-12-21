@@ -10,7 +10,21 @@ class DecksController < ApplicationController
   def create
     respond_to do |format|
       format.json do
-        command_bus.call(Content::CreateDeckInCourse.new(deck_uuid: params[:deck_uuid], course_uuid: params[:course_uuid]))
+        command_bus.call(
+          Content::CreateDeckInCourse.new(deck_uuid: params[:deck_uuid], course_uuid: params[:course_uuid])
+        )
+
+        head :no_content
+      end
+    end
+  end
+
+  def destroy
+    respond_to do |format|
+      format.json do
+        # command_bus.call(
+
+        # )
 
         head :no_content
       end

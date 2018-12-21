@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :courses, only: %i[index create destroy] do
-    resources :decks, only: %i[index create]
+    resources :decks, only: %i[index create destroy]
   end
 
   resources :decks, only: [] do

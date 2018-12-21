@@ -26,6 +26,19 @@ RSpec.describe DecksController, type: :request do
     expect(JSON.parse(response.body)).to eq([phrasal_verbs.as_json])
   end
 
+  specify 'remove a deck' do
+    post '/courses', params: english_grammar, headers: { accept: 'application/json' }
+    post "/courses/#{english_grammar[:course_uuid]}/decks",
+         params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid] },
+         headers: { accept: 'application/json' }
+    delete "/courses/#{english_grammar[:course_uuid]}/decks/#{phrasal_verbs[:deck_uuid]}",
+           params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid] },
+           headers: { accept: 'application/json' }
+
+    expect(response).to have_http_status(204)
+    expect(response.body).to eq('')
+  end
+
   specify 'show empty deck' do
     get "/decks/#{phrasal_verbs[:deck_uuid]}/cards",
         params: { deck_uuid: phrasal_verbs[:deck_uuid] },
