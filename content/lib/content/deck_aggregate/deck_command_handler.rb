@@ -14,6 +14,14 @@ module Content
       end
     end
 
+    def set_deck_title(cmd)
+      ActiveRecord::Base.transaction do
+        with_deck(cmd.deck_uuid) do |deck|
+          deck.set_title(cmd.title)
+        end
+      end
+    end
+
     def remove_deck(cmd)
       ActiveRecord::Base.transaction do
         with_deck(cmd.deck_uuid) do |deck|

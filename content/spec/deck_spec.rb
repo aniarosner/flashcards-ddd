@@ -36,6 +36,14 @@ module Content
       )
     end
 
+    specify 'set deck title' do
+      deck = Content::Deck.new(phrasal_verbs[:deck_uuid], SuccessCoursePresenceValidator.new)
+      deck.create_in_course(english_grammar[:course_uuid])
+      deck.set_title(phrasal_verbs[:title])
+
+      expect(deck).to have_applied(deck_title_set)
+    end
+
     specify 'add card to deck' do
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid], SuccessCoursePresenceValidator.new)
       deck.create_in_course(english_grammar[:course_uuid])
@@ -59,6 +67,13 @@ module Content
       an_event(Content::DeckCreatedInCourse).with_data(
         course_uuid: english_grammar[:course_uuid],
         deck_uuid: phrasal_verbs[:deck_uuid]
+      ).strict
+    end
+
+    def deck_title_set
+      an_event(Content::DeckTitleSet).with_data(
+        deck_uuid: phrasal_verbs[:deck_uuid],
+        title: phrasal_verbs[:title]
       ).strict
     end
 
@@ -94,7 +109,8 @@ module Content
 
     def phrasal_verbs
       {
-        deck_uuid: '856a739c-e18c-4831-8958-695feccd2d73'
+        deck_uuid: '856a739c-e18c-4831-8958-695feccd2d73',
+        title: 'Phrasal Verbs'
       }
     end
   end

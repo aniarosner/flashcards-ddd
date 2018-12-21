@@ -36,6 +36,7 @@ Rails.configuration.to_prepare do
     bus.register(Content::SetCourseTitle, ->(cmd) { Content::CourseCommandHandler.new.set_course_title(cmd) })
     bus.register(Content::RemoveCourse, ->(cmd) { Content::CourseCommandHandler.new.remove_course(cmd) })
     bus.register(Content::CreateDeckInCourse, ->(cmd) { Content::DeckCommandHandler.new.create_deck_in_course(cmd) })
+    bus.register(Content::SetDeckTitle, ->(cmd) { Content::DeckCommandHandler.new.set_deck_title(cmd) })
     bus.register(Content::RemoveDeck, ->(cmd) { Content::DeckCommandHandler.new.remove_deck(cmd) })
     bus.register(Content::AddCardToDeck, ->(cmd) { Content::DeckCommandHandler.new.add_card_to_deck(cmd) })
     bus.register(Content::RemoveCardFromDeck, ->(cmd) { Content::DeckCommandHandler.new.remove_card_from_deck(cmd) })

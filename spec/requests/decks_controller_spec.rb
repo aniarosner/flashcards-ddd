@@ -11,9 +11,9 @@ RSpec.describe DecksController, type: :request do
 
   specify 'add a deck' do
     post '/courses', params: english_grammar, headers: { accept: 'application/json' }
-    post "/courses/#{english_grammar[:course_uuid]}/decks",
-         params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid] },
-         headers: { accept: 'application/json' }
+    post "/courses/#{english_grammar[:course_uuid]}/decks", params: {
+         course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid], title: phrasal_verbs[:title]
+         }, headers: { accept: 'application/json' }
 
     expect(response).to have_http_status(204)
     expect(response.body).to eq('')
@@ -105,7 +105,8 @@ RSpec.describe DecksController, type: :request do
 
   def phrasal_verbs
     {
-      deck_uuid: '856a739c-e18c-4831-8958-695feccd2d73'
+      deck_uuid: '856a739c-e18c-4831-8958-695feccd2d73',
+      title: 'Phrasal Verbs'
     }
   end
 

@@ -1,8 +1,9 @@
 module Content
   RSpec.describe 'DeckCommandHandler' do
-    specify 'add deck to course' do
+    specify 'create deck in course' do
       Content::CourseCommandHandler.new.create_course(create_course)
       Content::DeckCommandHandler.new.create_deck_in_course(create_deck_in_course)
+      Content::DeckCommandHandler.new.set_deck_title(set_deck_title)
 
       expect(event_store).to have_published(deck_created_in_course)
     end
@@ -36,6 +37,13 @@ module Content
       Content::CreateDeckInCourse.new(
         course_uuid: english_grammar[:course_uuid],
         deck_uuid: phrasal_verbs[:deck_uuid]
+      )
+    end
+
+    def set_deck_title
+      Content::SetDeckTitle.new(
+        deck_uuid: phrasal_verbs[:deck_uuid],
+        title: phrasal_verbs[:title]
       )
     end
 
@@ -87,7 +95,8 @@ module Content
 
     def phrasal_verbs
       {
-        deck_uuid: '856a739c-e18c-4831-8958-695feccd2d73'
+        deck_uuid: '856a739c-e18c-4831-8958-695feccd2d73',
+        title: 'Phrasal Verbs'
       }
     end
 

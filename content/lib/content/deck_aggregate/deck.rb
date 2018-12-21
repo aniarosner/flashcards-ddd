@@ -21,6 +21,13 @@ module Content
       apply(Content::DeckCreatedInCourse.new(data: { deck_uuid: @deck_uuid, course_uuid: course_uuid }))
     end
 
+    def set_title(title)
+      raise NotCreated if @state.initialized?
+      raise Removed if @state.removed?
+
+      apply(Content::DeckTitleSet.new(data: { deck_uuid: @deck_uuid, title: title }))
+    end
+
     def remove(course_uuid)
       raise NotCreated if @state.initialized?
       raise Removed if @state.removed?
@@ -45,6 +52,9 @@ module Content
 
     on Content::DeckCreatedInCourse do |_event|
       @state = Content::DeckState.new(:created)
+    end
+
+    on Content::DeckTitleSet do |_event|
     end
 
     on Content::DeckRemoved do |_event|
