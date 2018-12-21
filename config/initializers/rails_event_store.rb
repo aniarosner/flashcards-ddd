@@ -18,10 +18,10 @@ Rails.configuration.to_prepare do
       ])
     store.subscribe(Decks::EventHandler.new, to:
       [
-        Content::DeckCreatedInCourse, Content::DeckRemoved
+        Content::DeckCreatedInCourse, Content::DeckRemoved, Content::CourseRemoved
       ])
     store.subscribe(Cards::EventHandler.new, to:
-      [
+      [ # TODO: Add Content::CourseRemoved
         Content::CardAddedToDeck, Content::CardRemovedFromDeck, Content::DeckRemoved
       ])
     # CONTENT
