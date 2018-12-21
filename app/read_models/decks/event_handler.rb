@@ -5,6 +5,8 @@ module Decks
       case domain_event
       when Content::DeckCreatedInCourse
         create_deck_in_course(data[:deck_uuid], data[:course_uuid])
+      when Content::DeckRemoved
+        remove_deck(data[:deck_uuid])
       end
     end
 
@@ -15,6 +17,11 @@ module Decks
         deck_uuid: deck_uuid,
         course_uuid: course_uuid
       )
+    end
+
+    def remove_deck(deck_uuid)
+      deck = Decks::Deck.find_by(deck_uuid: deck_uuid)
+      deck.destroy
     end
   end
 end

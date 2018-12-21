@@ -18,15 +18,15 @@ Rails.configuration.to_prepare do
       ])
     store.subscribe(Decks::EventHandler.new, to:
       [
-        Content::DeckCreatedInCourse
+        Content::DeckCreatedInCourse, Content::DeckRemoved
       ])
     store.subscribe(Cards::EventHandler.new, to:
       [
-        Content::CardAddedToDeck, Content::CardRemovedFromDeck
+        Content::CardAddedToDeck, Content::CardRemovedFromDeck, Content::DeckRemoved
       ])
     # CONTENT
     store.subscribe(Content::Courses::EventHandler.new, to:
-      [
+      [ # TODO: add Content::CourseRemoved
         Content::CourseCreated
       ])
   end
@@ -36,6 +36,7 @@ Rails.configuration.to_prepare do
     bus.register(Content::SetCourseTitle, ->(cmd) { Content::CourseCommandHandler.new.set_course_title(cmd) })
     bus.register(Content::RemoveCourse, ->(cmd) { Content::CourseCommandHandler.new.remove_course(cmd) })
     bus.register(Content::CreateDeckInCourse, ->(cmd) { Content::DeckCommandHandler.new.create_deck_in_course(cmd) })
+    bus.register(Content::RemoveDeck, ->(cmd) { Content::DeckCommandHandler.new.remove_deck(cmd) })
     bus.register(Content::AddCardToDeck, ->(cmd) { Content::DeckCommandHandler.new.add_card_to_deck(cmd) })
     bus.register(Content::RemoveCardFromDeck, ->(cmd) { Content::DeckCommandHandler.new.remove_card_from_deck(cmd) })
   end

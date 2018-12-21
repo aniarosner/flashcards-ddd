@@ -2,7 +2,7 @@ module Content
   class Deck
     include AggregateRoot
 
-    CourseNotCreated = Class.new(StandardError)
+    CourseNotCreated = Class.new(StandardError) # TODO:  Change to more general to cover if removed
     AlreadyCreatedInCourse = Class.new(StandardError)
 
     def initialize(deck_uuid, course_presence_validator)
@@ -15,25 +15,37 @@ module Content
     # TODO: add action create with state :created
 
     def create_in_course(course_uuid)
+      # TODO: add validation for removed state
       raise AlreadyCreatedInCourse if @state.added_to_course?
       raise CourseNotCreated unless @course_presence_validator.verify(course_uuid)
 
       apply(Content::DeckCreatedInCourse.new(data: { deck_uuid: @deck_uuid, course_uuid: course_uuid }))
     end
 
+    def remove(course_uuid)
+      # TODO: add validation for created / removed state
+
+      apply(Content::DeckRemoved.new(data: { deck_uuid: @deck_uuid, course_uuid: course_uuid }))
+    end
+
     def add_card(card)
-      # TODO: add validation for created state
+      # TODO: add validation for created / removed state
       apply(Content::CardAddedToDeck.new(data: { deck_uuid: @deck_uuid, front: card.front, back: card.back }))
     end
 
     def remove_card(card)
-      # TODO: add validation for created state
+      # TODO: add validation for created / removed state
       # TODO: check if card in deck
       apply(Content::CardRemovedFromDeck.new(data: { deck_uuid: @deck_uuid, front: card.front, back: card.back }))
     end
 
     on Content::DeckCreatedInCourse do |_event|
       @state = Content::DeckState.new(:added_to_course)
+    end
+
+    on Content::DeckRemoved do |_event|
+      @state = Content::DeckState.new(:removed)
+      @cards = []
     end
 
     on Content::CardAddedToDeck do |event|

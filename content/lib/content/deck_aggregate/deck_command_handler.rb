@@ -14,6 +14,14 @@ module Content
       end
     end
 
+    def remove_deck(cmd)
+      ActiveRecord::Base.transaction do
+        with_deck(cmd.deck_uuid) do |deck|
+          deck.remove(cmd.course_uuid)
+        end
+      end
+    end
+
     def add_card_to_deck(cmd)
       ActiveRecord::Base.transaction do
         card = Content::Card.new(cmd.front, cmd.back)

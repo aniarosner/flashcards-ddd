@@ -22,9 +22,7 @@ class DecksController < ApplicationController
   def destroy
     respond_to do |format|
       format.json do
-        # command_bus.call(
-
-        # )
+        command_bus.call(Content::RemoveDeck.new(deck_uuid: params[:deck_uuid], course_uuid: params[:course_uuid]))
 
         head :no_content
       end
