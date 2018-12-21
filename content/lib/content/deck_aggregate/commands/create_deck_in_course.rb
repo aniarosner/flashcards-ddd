@@ -1,5 +1,5 @@
 module Content
-  class AddDeckToCourse
+  class CreateDeckInCourse
     include Command
 
     attr_reader :course_uuid

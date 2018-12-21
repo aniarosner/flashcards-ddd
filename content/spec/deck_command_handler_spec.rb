@@ -2,26 +2,26 @@ module Content
   RSpec.describe 'DeckCommandHandler' do
     specify 'add deck to course' do
       Content::CourseCommandHandler.new.create_course(create_course)
-      Content::DeckCommandHandler.new.add_deck_to_course(add_deck_to_course)
+      Content::DeckCommandHandler.new.create_deck_in_course(create_deck_in_course)
 
-      expect(event_store).to have_published(deck_added_to_course)
+      expect(event_store).to have_published(deck_created_in_course)
     end
 
     specify 'add card to deck' do
       Content::CourseCommandHandler.new.create_course(create_course)
-      Content::DeckCommandHandler.new.add_deck_to_course(add_deck_to_course)
+      Content::DeckCommandHandler.new.create_deck_in_course(create_deck_in_course)
       Content::DeckCommandHandler.new.add_card_to_deck(add_card_to_deck)
 
-      expect(event_store).to have_published(deck_added_to_course, card_added_to_deck)
+      expect(event_store).to have_published(deck_created_in_course, card_added_to_deck)
     end
 
     specify 'remove card from deck' do
       Content::CourseCommandHandler.new.create_course(create_course)
-      Content::DeckCommandHandler.new.add_deck_to_course(add_deck_to_course)
+      Content::DeckCommandHandler.new.create_deck_in_course(create_deck_in_course)
       Content::DeckCommandHandler.new.add_card_to_deck(add_card_to_deck)
       Content::DeckCommandHandler.new.remove_card_from_deck(remove_card_from_deck)
 
-      expect(event_store).to have_published(deck_added_to_course, card_added_to_deck)
+      expect(event_store).to have_published(deck_created_in_course, card_added_to_deck)
     end
 
     private
@@ -32,8 +32,8 @@ module Content
       )
     end
 
-    def add_deck_to_course
-      Content::AddDeckToCourse.new(
+    def create_deck_in_course
+      Content::CreateDeckInCourse.new(
         course_uuid: course_english_grammar[:course_uuid],
         deck_uuid: deck_phrasal_verbs[:deck_uuid]
       )
@@ -55,8 +55,8 @@ module Content
       )
     end
 
-    def deck_added_to_course
-      an_event(Content::DeckAddedToCourse).with_data(
+    def deck_created_in_course
+      an_event(Content::DeckCreatedInCourse).with_data(
         course_uuid: course_english_grammar[:course_uuid],
         deck_uuid: deck_phrasal_verbs[:deck_uuid]
       ).strict

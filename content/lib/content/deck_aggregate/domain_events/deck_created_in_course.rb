@@ -1,5 +1,5 @@
 module Content
-  class DeckAddedToCourse < RailsEventStore::Event
+  class DeckCreatedInCourse < RailsEventStore::Event
     SCHEMA = {
       course_uuid: String,
       deck_uuid: String

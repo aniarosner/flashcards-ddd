@@ -6,10 +6,10 @@ module Content
       @course_presence_validator = Content::CoursePresenceValidator.new
     end
 
-    def add_deck_to_course(cmd)
+    def create_deck_in_course(cmd)
       ActiveRecord::Base.transaction do
         with_deck(cmd.deck_uuid) do |deck|
-          deck.add_to_course(cmd.course_uuid)
+          deck.create_in_course(cmd.course_uuid)
         end
       end
     end
