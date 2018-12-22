@@ -47,8 +47,8 @@ RSpec.describe DecksController, type: :request do
   end
 
   specify 'show empty deck' do
-    get "/decks/#{phrasal_verbs[:deck_uuid]}/cards",
-        params: { deck_uuid: phrasal_verbs[:deck_uuid] },
+    get "/courses/#{english_grammar[:course_uuid]}/decks/#{phrasal_verbs[:deck_uuid]}/cards",
+        params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid] },
         headers: { accept: 'application/json' }
     expect(response).to have_http_status(200)
     expect(JSON.parse(response.body)).to eq([])
@@ -59,14 +59,15 @@ RSpec.describe DecksController, type: :request do
     post "/courses/#{english_grammar[:course_uuid]}/decks",
          params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid] },
          headers: { accept: 'application/json' }
-    post "/decks/#{phrasal_verbs[:deck_uuid]}/add_card",
-         params: { deck_uuid: phrasal_verbs[:deck_uuid], front: look_forward_to[:front], back: look_forward_to[:back] },
+    post "/courses/#{english_grammar[:course_uuid]}/decks/#{phrasal_verbs[:deck_uuid]}/add_card",
+         params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid],
+                   front: look_forward_to[:front], back: look_forward_to[:back] },
          headers: { accept: 'application/json' }
     expect(response).to have_http_status(204)
     expect(response.body).to eq('')
 
-    get "/decks/#{phrasal_verbs[:deck_uuid]}/cards",
-        params: { deck_uuid: phrasal_verbs[:deck_uuid] },
+    get "/courses/#{english_grammar[:course_uuid]}/decks/#{phrasal_verbs[:deck_uuid]}/cards",
+        params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid] },
         headers: { accept: 'application/json' }
     expect(response).to have_http_status(200)
     expect(JSON.parse(response.body)).to eq([look_forward_to.as_json])
@@ -77,19 +78,21 @@ RSpec.describe DecksController, type: :request do
     post "/courses/#{english_grammar[:course_uuid]}/decks",
          params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid] },
          headers: { accept: 'application/json' }
-    post "/decks/#{phrasal_verbs[:deck_uuid]}/add_card",
-         params: { deck_uuid: phrasal_verbs[:deck_uuid], front: look_forward_to[:front], back: look_forward_to[:back] },
+    post "/courses/#{english_grammar[:course_uuid]}/decks/#{phrasal_verbs[:deck_uuid]}/add_card",
+         params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid],
+                   front: look_forward_to[:front], back: look_forward_to[:back] },
          headers: { accept: 'application/json' }
     expect(response).to have_http_status(204)
     expect(response.body).to eq('')
 
-    delete "/decks/#{phrasal_verbs[:deck_uuid]}/remove_card", params: {
-      deck_uuid: phrasal_verbs[:deck_uuid], front: look_forward_to[:front], back: look_forward_to[:back]
-    }, headers: { accept: 'application/json' }
+    delete "/courses/#{english_grammar[:course_uuid]}/decks/#{phrasal_verbs[:deck_uuid]}/remove_card",
+           params: { course_uuid: english_grammar[:course_uuid], deck_uuid: phrasal_verbs[:deck_uuid],
+                     front: look_forward_to[:front], back: look_forward_to[:back] },
+           headers: { accept: 'application/json' }
     expect(response).to have_http_status(204)
     expect(response.body).to eq('')
 
-    get "/decks/#{phrasal_verbs[:deck_uuid]}/cards",
+    get "/courses/#{english_grammar[:course_uuid]}/decks/#{phrasal_verbs[:deck_uuid]}/cards",
         params: { deck_uuid: phrasal_verbs[:deck_uuid] },
         headers: { accept: 'application/json' }
     expect(response).to have_http_status(200)
