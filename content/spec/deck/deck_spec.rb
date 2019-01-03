@@ -68,6 +68,16 @@ module Content
       expect(deck).to have_applied(deck_created_in_course, card_added_to_deck)
     end
 
+    specify 'cannot add twice same card to deck' do
+      deck = Content::Deck.new(phrasal_verbs[:deck_uuid], SuccessCoursePresenceValidator.new)
+      deck.create_in_course(english_grammar[:course_uuid])
+      deck.add_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back]))
+
+      expect { deck.add_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back])) }.to(
+        raise_error(Content::Deck::CardAlreadyInDeck)
+      )
+    end
+
     specify 'remove card from deck' do
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid], SuccessCoursePresenceValidator.new)
       deck.create_in_course(english_grammar[:course_uuid])
