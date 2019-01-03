@@ -77,6 +77,15 @@ module Content
       expect(deck).to have_applied(deck_created_in_course, card_added_to_deck, card_removed_from_deck)
     end
 
+    specify 'cannot remove card from deck that is not present' do
+      deck = Content::Deck.new(phrasal_verbs[:deck_uuid], SuccessCoursePresenceValidator.new)
+      deck.create_in_course(english_grammar[:course_uuid])
+
+      expect { deck.remove_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back])) }.to(
+        raise_error(Content::Deck::CardNotPresent)
+      )
+    end
+
     specify 'cannot make operations on not created deck' do
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid], SuccessCoursePresenceValidator.new)
 

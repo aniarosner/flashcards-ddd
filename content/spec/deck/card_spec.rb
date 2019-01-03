@@ -15,5 +15,8 @@ module Content
     specify { expect(Content::Card.new(front, back)).not_to eq Content::Card.new(front, other_back) }
     specify { expect(Content::Card.new(front, back)).not_to eq Content::Card.new(other_front, back) }
     specify { expect(Content::Card.new(front, back)).not_to eq Content::Card.new(other_front, other_back) }
+
+    specify { expect(Content::Card.new(front, back).in?([Content::Card.new(front, back)])).to eq true }
+    specify { expect(Content::Card.new(other_front, other_back).in?([Content::Card.new(front, back)])).to eq false }
   end
 end

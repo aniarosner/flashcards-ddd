@@ -6,6 +6,7 @@ module Content
     AlreadyCreated = Class.new(StandardError)
     Removed = Class.new(StandardError)
     NotCreated = Class.new(StandardError)
+    CardNotPresent = Class.new(StandardError)
 
     def initialize(deck_uuid, course_presence_validator)
       @deck_uuid = deck_uuid
@@ -46,8 +47,8 @@ module Content
     def remove_card(card)
       raise NotCreated if @state.initialized?
       raise Removed if @state.removed?
+      raise CardNotPresent unless card.in?(@cards)
 
-      # TODO: check if card in deck
       apply(Content::CardRemovedFromDeck.new(data: { deck_uuid: @deck_uuid, front: card.front, back: card.back }))
     end
 
