@@ -1,5 +1,7 @@
 module Cards
   class EventHandler
+    EVENTS = [Content::CardAddedToDeck, Content::CardRemovedFromDeck, Content::DeckRemoved].freeze
+
     def call(domain_event)
       data = domain_event.data
       case domain_event

@@ -1,5 +1,7 @@
 module Courses
   class EventHandler
+    EVENTS = [Content::CourseCreated, Content::CourseTitleSet, Content::CourseRemoved].freeze
+
     def call(domain_event)
       data = domain_event.data
       case domain_event

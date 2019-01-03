@@ -1,5 +1,7 @@
 module Decks
   class EventHandler
+    EVENTS = [Content::DeckCreatedInCourse, Content::DeckTitleSet, Content::DeckRemoved].freeze
+
     def call(domain_event)
       data = domain_event.data
       case domain_event

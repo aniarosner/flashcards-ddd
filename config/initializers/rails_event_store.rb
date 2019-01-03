@@ -12,18 +12,9 @@ Rails.configuration.to_prepare do
 
   Rails.configuration.event_store.tap do |store|
     # APP
-    store.subscribe(Courses::EventHandler, to:
-      [
-        Content::CourseCreated, Content::CourseTitleSet, Content::CourseRemoved
-      ])
-    store.subscribe(Decks::EventHandler, to:
-      [
-        Content::DeckCreatedInCourse, Content::DeckTitleSet, Content::DeckRemoved, Content::CourseRemoved
-      ])
-    store.subscribe(Cards::EventHandler, to:
-      [
-        Content::CardAddedToDeck, Content::CardRemovedFromDeck, Content::DeckRemoved
-      ])
+    store.subscribe(Courses::EventHandler, to: Courses::EventHandler::EVENTS)
+    store.subscribe(Decks::EventHandler, to: Decks::EventHandler::EVENTS)
+    store.subscribe(Cards::EventHandler, to: Cards::EventHandler::EVENTS)
     # CONTENT
     store.subscribe(Content::Courses::EventHandler, to:
       [
