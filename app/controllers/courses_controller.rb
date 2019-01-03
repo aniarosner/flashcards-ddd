@@ -26,10 +26,10 @@ class CoursesController < ApplicationController
 
   def destroy
     respond_to do |format|
-      format.json do
-        command_bus.call(Content::RemoveCourse.new(course_uuid: params[:course_uuid]))
-        head :no_content
-      end
+      command_bus.call(Content::RemoveCourse.new(course_uuid: params[:uuid]))
+
+      format.json { head :no_content }
+      format.html { redirect_to courses_path }
     end
   end
 end

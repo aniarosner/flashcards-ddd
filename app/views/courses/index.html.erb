@@ -1,7 +1,10 @@
 <h1>Courses</h1>
 <ul>
   <% courses.each do |course| %>
-    <li><%= link_to(course.title, course_decks_path(course.course_uuid)) %></li>
+    <li>
+        <%= link_to(course.title, course_decks_path(course_uuid: course.course_uuid)) %>
+        <%= link_to('Remove', course_path(course.course_uuid), method: :delete) %>
+    </li>
   <% end %>
 </ul>
 
