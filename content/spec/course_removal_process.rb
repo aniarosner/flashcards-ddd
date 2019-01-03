@@ -10,6 +10,16 @@ module Content
       expect(command_bus.commands.first).to be_instance_of(Content::RemoveDeck)
     end
 
+    specify 'no decks to be removed' do
+      process = Content::CourseRemovalProcess.new(command_bus: command_bus)
+      [course_created, deck_created_in_course, deck_removed, course_removed].each do |event|
+        event_store.append(event)
+        process.call(event)
+      end
+
+      expect(command_bus.commands.first).to be_nil
+    end
+
     private
 
     class FakeCommandBus
