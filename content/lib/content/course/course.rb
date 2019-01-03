@@ -12,7 +12,7 @@ module Content
     end
 
     def create
-      raise AlreadyCreated if @state.created? || @state.removed?
+      raise AlreadyCreated unless @state.initialized?
 
       apply(Content::CourseCreated.new(data: { course_uuid: @course_uuid }))
     end
@@ -20,13 +20,12 @@ module Content
     def set_title(title)
       raise NotCreated if @state.initialized?
       raise Removed if @state.removed?
-      raise NotCreated unless @state.created?
 
       apply(Content::CourseTitleSet.new(data: { course_uuid: @course_uuid, title: title }))
     end
 
     def remove
-      raise NotCreated unless @state.created?
+      raise NotCreated if @state.initialized?
       raise AlreadyRemoved if @state.removed?
 
       apply(Content::CourseRemoved.new(data: { course_uuid: @course_uuid }))
