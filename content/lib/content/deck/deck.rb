@@ -17,7 +17,7 @@ module Content
 
     def create_in_course(course_uuid)
       raise CourseNotCreated unless @course_presence_validator.verify(course_uuid)
-      raise AlreadyCreated if @state.created? || @state.removed?
+      raise AlreadyCreated unless @state.initialized?
 
       apply(Content::DeckCreatedInCourse.new(data: { deck_uuid: @deck_uuid, course_uuid: course_uuid }))
     end
