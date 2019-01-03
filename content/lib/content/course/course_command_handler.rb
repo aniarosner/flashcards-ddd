@@ -2,7 +2,6 @@ module Content
   class CourseCommandHandler
     def initialize
       @event_store = Rails.configuration.event_store
-      @command_bus = Rails.configuration.command_bus
     end
 
     def create_course(cmd)
