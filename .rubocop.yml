@@ -41,5 +41,8 @@ Style/IndentHash:
 Style/RaiseArgs:
   Enabled: false
 
+Style/SymbolProc:
+  Enabled: false
+
 Naming/AccessorMethodName:
   Enabled: false

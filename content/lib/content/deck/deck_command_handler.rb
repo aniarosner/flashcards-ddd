@@ -24,7 +24,7 @@ module Content
     def remove_deck(cmd)
       ActiveRecord::Base.transaction do
         with_deck(cmd.deck_uuid) do |deck|
-          deck.remove(cmd.course_uuid)
+          deck.remove
         end
       end
     end

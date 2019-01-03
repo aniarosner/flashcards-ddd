@@ -44,6 +44,14 @@ module Content
       expect(deck).to have_applied(deck_title_set)
     end
 
+    specify 'remove deck' do
+      deck = Content::Deck.new(phrasal_verbs[:deck_uuid], SuccessCoursePresenceValidator.new)
+      deck.create_in_course(english_grammar[:course_uuid])
+      deck.remove
+
+      expect(deck).to have_applied(deck_created_in_course, deck_removed)
+    end
+
     specify 'add card to deck' do
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid], SuccessCoursePresenceValidator.new)
       deck.create_in_course(english_grammar[:course_uuid])
@@ -74,6 +82,13 @@ module Content
       an_event(Content::DeckTitleSet).with_data(
         deck_uuid: phrasal_verbs[:deck_uuid],
         title: phrasal_verbs[:title]
+      ).strict
+    end
+
+    def deck_removed
+      an_event(Content::DeckRemoved).with_data(
+        course_uuid: english_grammar[:course_uuid],
+        deck_uuid: phrasal_verbs[:deck_uuid]
       ).strict
     end
 

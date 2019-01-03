@@ -10,6 +10,7 @@ module Content
     def initialize(deck_uuid, course_presence_validator)
       @deck_uuid = deck_uuid
       @state = Content::DeckState.new(:initialized)
+      @course_uuid = nil
       @cards = []
       @course_presence_validator = course_presence_validator
     end
@@ -28,11 +29,11 @@ module Content
       apply(Content::DeckTitleSet.new(data: { deck_uuid: @deck_uuid, title: title }))
     end
 
-    def remove(course_uuid)
+    def remove
       raise NotCreated if @state.initialized?
       raise Removed if @state.removed?
 
-      apply(Content::DeckRemoved.new(data: { deck_uuid: @deck_uuid, course_uuid: course_uuid }))
+      apply(Content::DeckRemoved.new(data: { deck_uuid: @deck_uuid, course_uuid: @course_uuid }))
     end
 
     def add_card(card)
@@ -50,8 +51,9 @@ module Content
       apply(Content::CardRemovedFromDeck.new(data: { deck_uuid: @deck_uuid, front: card.front, back: card.back }))
     end
 
-    on Content::DeckCreatedInCourse do |_event|
+    on Content::DeckCreatedInCourse do |event|
       @state = Content::DeckState.new(:created)
+      @course_uuid = event.data[:course_uuid]
     end
 
     on Content::DeckTitleSet do |_event|
