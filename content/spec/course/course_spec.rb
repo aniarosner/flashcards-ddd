@@ -1,4 +1,3 @@
-# TODO: add missing specs
 module Content
   RSpec.describe 'Course aggregate' do
     specify 'create new course' do
@@ -11,6 +10,14 @@ module Content
     specify 'course cannot be created twice' do
       course = Content::Course.new(english_grammar[:course_uuid])
       course.create
+
+      expect { course.create }.to(raise_error(Content::Course::AlreadyCreated))
+    end
+
+    specify 'course cannot be created again after removal' do
+      course = Content::Course.new(english_grammar[:course_uuid])
+      course.create
+      course.remove
 
       expect { course.create }.to(raise_error(Content::Course::AlreadyCreated))
     end
@@ -30,6 +37,29 @@ module Content
       course.remove
 
       expect(course).to have_applied(course_created, course_title_set, course_removed)
+    end
+
+    specify 'course cannot be removed twice' do
+      course = Content::Course.new(english_grammar[:course_uuid])
+      course.create
+      course.remove
+
+      expect { course.remove }.to(raise_error(Content::Course::Removed))
+    end
+
+    specify 'cannot make operations on not created course' do
+      course = Content::Course.new(english_grammar[:course_uuid])
+
+      expect { course.set_title(english_grammar[:title]) }.to(raise_error(Content::Course::NotCreated))
+      expect { course.remove }.to(raise_error(Content::Course::NotCreated))
+    end
+
+    specify 'cannot make operations on removed course' do
+      course = Content::Course.new(english_grammar[:course_uuid])
+      course.create
+      course.remove
+
+      expect { course.set_title(english_grammar[:title]) }.to(raise_error(Content::Course::Removed))
     end
 
     private

@@ -26,7 +26,7 @@ module Content
 
     def remove
       raise NotCreated if @state.initialized?
-      raise AlreadyRemoved if @state.removed?
+      raise Removed if @state.removed?
 
       apply(Content::CourseRemoved.new(data: { course_uuid: @course_uuid }))
     end
