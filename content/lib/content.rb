@@ -26,7 +26,8 @@ require_dependency 'content/deck/remove_card_from_deck.rb'
 require_dependency 'content/deck/remove_deck.rb'
 require_dependency 'content/deck/set_deck_title.rb'
 
-
 require_dependency 'content/read_models/courses/course.rb'
 require_dependency 'content/read_models/courses/event_handler.rb'
 require_dependency 'content/read_models/courses/read_model.rb'
+
+require_dependency 'content/processes/course_removal_process.rb'

@@ -29,6 +29,10 @@ Rails.configuration.to_prepare do
       [
         Content::CourseCreated, Content::CourseRemoved
       ])
+    store.subscribe(Content::CourseRemovalProcess, to:
+      [
+        Content::DeckCreatedInCourse, Content::DeckRemoved, Content::CourseRemoved
+      ])
   end
 
   Rails.configuration.command_bus.tap do |bus|
