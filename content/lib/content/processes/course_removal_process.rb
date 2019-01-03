@@ -1,5 +1,7 @@
 module Content
   class CourseRemovalProcess
+    EVENTS = [Content::CourseRemoved, Content::DeckCreatedInCourse, Content::DeckRemoved].freeze
+
     def initialize(event_store: Rails.configuration.event_store, command_bus: Rails.configuration.command_bus)
       @event_store = event_store
       @command_bus = command_bus

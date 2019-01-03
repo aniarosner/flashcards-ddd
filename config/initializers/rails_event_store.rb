@@ -16,14 +16,8 @@ Rails.configuration.to_prepare do
     store.subscribe(Decks::EventHandler, to: Decks::EventHandler::EVENTS)
     store.subscribe(Cards::EventHandler, to: Cards::EventHandler::EVENTS)
     # CONTENT
-    store.subscribe(Content::Courses::EventHandler, to:
-      [
-        Content::CourseCreated, Content::CourseRemoved
-      ])
-    store.subscribe(Content::CourseRemovalProcess, to:
-      [
-        Content::DeckCreatedInCourse, Content::DeckRemoved, Content::CourseRemoved
-      ])
+    store.subscribe(Content::Courses::EventHandler, to: Content::Courses::EventHandler::EVENTS)
+    store.subscribe(Content::CourseRemovalProcess, to: Content::CourseRemovalProcess::EVENTS)
   end
 
   Rails.configuration.command_bus.tap do |bus|
