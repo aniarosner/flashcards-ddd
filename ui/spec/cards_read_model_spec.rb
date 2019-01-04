@@ -10,6 +10,12 @@ RSpec.describe UI::Cards::ReadModel do
     expect(cards_read_model.from_deck(phrasal_verbs[:deck_uuid])).to be_empty
   end
 
+  specify 'removes deck with all cards' do
+    cards_event_handler.call(card_added_to_deck)
+    cards_event_handler.call(deck_removed)
+    expect(cards_read_model.from_deck(phrasal_verbs[:deck_uuid])).to be_empty
+  end
+
   def deck_removed
     Content::DeckRemoved.strict(data: {
       course_uuid: english_grammar[:course_uuid],
