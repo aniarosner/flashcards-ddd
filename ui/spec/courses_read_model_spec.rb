@@ -16,20 +16,20 @@ RSpec.describe UI::Courses::ReadModel do
   private
 
   def course_created
-    Content::CourseCreated.new(data: {
+    Content::CourseCreated.strict(data: {
       course_uuid: english_grammar[:course_uuid]
     })
   end
 
   def course_title_set
-    Content::CourseTitleSet.new(data: {
+    Content::CourseTitleSet.strict(data: {
       course_uuid: english_grammar[:course_uuid],
       title: english_grammar[:title]
     })
   end
 
   def course_removed
-    Content::CourseRemoved.new(data: {
+    Content::CourseRemoved.strict(data: {
       course_uuid: english_grammar[:course_uuid]
     })
   end

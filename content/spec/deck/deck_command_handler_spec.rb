@@ -4,7 +4,7 @@ module Content
       Content::CourseCommandHandler.new.create_course(create_course)
       Content::DeckCommandHandler.new.create_deck_in_course(create_deck_in_course)
       Content::DeckCommandHandler.new.set_deck_title(set_deck_title)
-
+      # TODO: add deck_title_set
       expect(event_store).to have_published(deck_created_in_course)
     end
 
