@@ -10,28 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_21_095651) do
+ActiveRecord::Schema.define(version: 2019_01_04_001034) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "cards_cards", primary_key: "uuid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "deck_uuid", null: false
-    t.string "front", null: false
-    t.string "back", null: false
-  end
-
   create_table "content_courses_courses", primary_key: "course_uuid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-  end
-
-  create_table "courses_courses", primary_key: "course_uuid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "title"
-  end
-
-  create_table "decks_decks", primary_key: "deck_uuid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "course_uuid"
-    t.string "title"
   end
 
   create_table "event_store_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -51,6 +36,21 @@ ActiveRecord::Schema.define(version: 2018_12_21_095651) do
     t.index ["created_at"], name: "index_event_store_events_in_streams_on_created_at"
     t.index ["stream", "event_id"], name: "index_event_store_events_in_streams_on_stream_and_event_id", unique: true
     t.index ["stream", "position"], name: "index_event_store_events_in_streams_on_stream_and_position", unique: true
+  end
+
+  create_table "ui_cards_cards", primary_key: "uuid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "deck_uuid", null: false
+    t.string "front", null: false
+    t.string "back", null: false
+  end
+
+  create_table "ui_courses_courses", primary_key: "course_uuid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title"
+  end
+
+  create_table "ui_decks_decks", primary_key: "deck_uuid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "course_uuid"
+    t.string "title"
   end
 
 end
