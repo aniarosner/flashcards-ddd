@@ -12,9 +12,9 @@ Rails.configuration.to_prepare do
 
   Rails.configuration.event_store.tap do |store|
     # APP
-    store.subscribe(Cards::EventHandler, to: Cards::EventHandler::EVENTS)
-    store.subscribe(Courses::EventHandler, to: Courses::EventHandler::EVENTS)
-    store.subscribe(Decks::EventHandler, to: Decks::EventHandler::EVENTS)
+    store.subscribe(UI::Cards::EventHandler, to: UI::Cards::EventHandler::EVENTS)
+    store.subscribe(UI::Courses::EventHandler, to: UI::Courses::EventHandler::EVENTS)
+    store.subscribe(UI::Decks::EventHandler, to: UI::Decks::EventHandler::EVENTS)
     # CONTENT
     store.subscribe(Content::Courses::EventHandler, to: Content::Courses::EventHandler::EVENTS)
     store.subscribe(Content::CourseRemovalProcess, to: Content::CourseRemovalProcess::EVENTS)

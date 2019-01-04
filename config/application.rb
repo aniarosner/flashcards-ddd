@@ -10,5 +10,6 @@ module FlashcardsApp
 
     config.paths.add 'command/lib', eager_load: true
     config.paths.add 'content/lib', eager_load: true
+    config.paths.add 'ui/lib', eager_load: true
   end
 end

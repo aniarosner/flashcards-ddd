@@ -2,12 +2,12 @@ class DecksController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        render json: Decks::ReadModel.new.from_course(params[:course_uuid]).as_json(except: :course_uuid), status: :ok
+        render json: UI::Decks::ReadModel.new.from_course(params[:course_uuid]).as_json(except: :course_uuid), status: :ok
       end
       format.html do
         render action: :index, locals: {
-          course: Courses::ReadModel.new.find(params[:course_uuid]),
-          decks: Decks::ReadModel.new.from_course(params[:course_uuid])
+          course: UI::Courses::ReadModel.new.find(params[:course_uuid]),
+          decks: UI::Decks::ReadModel.new.from_course(params[:course_uuid])
         }
       end
     end
@@ -44,12 +44,13 @@ class DecksController < ApplicationController
   def cards
     respond_to do |format|
       format.json do
-        render json: Cards::ReadModel.new.from_deck(params[:deck_uuid]).as_json(except: %i[deck_uuid uuid]), status: :ok
+        render json: UI::Cards::ReadModel.new.from_deck(params[:deck_uuid]).as_json(except: %i[deck_uuid uuid]),
+               status: :ok
       end
       format.html do
         render action: :cards, locals: {
-          deck: Decks::ReadModel.new.find(params[:deck_uuid]),
-          cards: Cards::ReadModel.new.from_deck(params[:deck_uuid])
+          deck: UI::Decks::ReadModel.new.find(params[:deck_uuid]),
+          cards: UI::Cards::ReadModel.new.from_deck(params[:deck_uuid])
         }
       end
     end

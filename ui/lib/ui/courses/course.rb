@@ -1,7 +1,7 @@
-module Content
+module UI
   module Courses
     class Course < ActiveRecord::Base
-      self.table_name = 'content_courses_courses'
+      self.table_name = 'courses_courses'
     end
   end
 end
