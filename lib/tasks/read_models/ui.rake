@@ -2,9 +2,9 @@ namespace :read_models do
   namespace :ui do
     desc 'Build all read models'
     task build_all: :environment do
-      Rake::Task['read_models:app:build_cards'].execute
-      Rake::Task['read_models:app:build_courses'].execute
-      Rake::Task['read_models:app:build_decks'].execute
+      Rake::Task['read_models:ui:build_cards'].execute
+      Rake::Task['read_models:ui:build_courses'].execute
+      Rake::Task['read_models:ui:build_decks'].execute
     end
 
     desc 'Build Cards read model'
