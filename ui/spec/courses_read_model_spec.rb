@@ -10,7 +10,7 @@ RSpec.describe UI::Courses::ReadModel do
     courses_event_handler.call(course_created)
     courses_event_handler.call(course_title_set)
     courses_event_handler.call(course_removed)
-    expect(courses_read_model.all.size).to eq(0)
+    expect(courses_read_model.all).to be_empty
   end
 
   private
