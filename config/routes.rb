@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   root 'courses#index'
-  mount RailsEventStore::Browser => '/res' if Rails.env.development?
+  mount RailsEventStore::Browser => '/res'
 
   resources :courses, only: %i[index create new destroy], param: :uuid do
     resources :decks, only: %i[index create new destroy], param: :deck_uuid do
