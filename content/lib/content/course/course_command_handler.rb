@@ -6,7 +6,9 @@ module Content
 
     def create_course(cmd)
       ActiveRecord::Base.transaction do
-        with_course(cmd.course_uuid, &:create)
+        with_course(cmd.course_uuid) do |course|
+          course.create
+        end
       end
     end
 
