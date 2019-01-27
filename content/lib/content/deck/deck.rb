@@ -9,16 +9,15 @@ module Content
     CardAlreadyInDeck = Class.new(StandardError)
     CardNotPresent = Class.new(StandardError)
 
-    def initialize(deck_uuid, course_presence_validator)
+    def initialize(deck_uuid)
       @deck_uuid = deck_uuid
       @state = Content::DeckState.new(:initialized)
       @course_uuid = nil
       @cards = []
-      @course_presence_validator = course_presence_validator
     end
 
-    def create_in_course(course_uuid)
-      raise CourseNotCreated unless @course_presence_validator.verify(course_uuid)
+    def create_in_course(course_uuid, course_presence_validator)
+      raise CourseNotCreated unless course_presence_validator.verify(course_uuid)
       raise AlreadyCreated unless @state.initialized?
 
       apply(Content::DeckCreatedInCourse.new(data: { deck_uuid: @deck_uuid, course_uuid: course_uuid }))

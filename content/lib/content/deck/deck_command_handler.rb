@@ -8,7 +8,7 @@ module Content
     def create_deck_in_course(cmd)
       ActiveRecord::Base.transaction do
         with_deck(cmd.deck_uuid) do |deck|
-          deck.create_in_course(cmd.course_uuid)
+          deck.create_in_course(cmd.course_uuid, @course_presence_validator)
         end
       end
     end
@@ -50,7 +50,7 @@ module Content
     private
 
     def with_deck(deck_uuid)
-      Content::Deck.new(deck_uuid, @course_presence_validator).tap do |deck|
+      Content::Deck.new(deck_uuid).tap do |deck|
         load_deck(deck_uuid, deck)
         yield deck
         store_deck(deck)
