@@ -4,25 +4,29 @@ module Content
       Content::CourseCommandHandler.new.create_course(create_course)
       Content::DeckCommandHandler.new.create_deck_in_course(create_deck_in_course)
       Content::DeckCommandHandler.new.set_deck_title(set_deck_title)
-      # TODO: add deck_title_set
-      expect(event_store).to have_published(deck_created_in_course)
+
+      expect(event_store).to have_published(deck_created_in_course, deck_title_set)
     end
 
     specify 'add card to deck' do
       Content::CourseCommandHandler.new.create_course(create_course)
       Content::DeckCommandHandler.new.create_deck_in_course(create_deck_in_course)
+      Content::DeckCommandHandler.new.set_deck_title(set_deck_title)
       Content::DeckCommandHandler.new.add_card_to_deck(add_card_to_deck)
 
-      expect(event_store).to have_published(deck_created_in_course, card_added_to_deck)
+      expect(event_store).to have_published(deck_created_in_course, deck_title_set, card_added_to_deck)
     end
 
     specify 'remove card from deck' do
       Content::CourseCommandHandler.new.create_course(create_course)
       Content::DeckCommandHandler.new.create_deck_in_course(create_deck_in_course)
+      Content::DeckCommandHandler.new.set_deck_title(set_deck_title)
       Content::DeckCommandHandler.new.add_card_to_deck(add_card_to_deck)
       Content::DeckCommandHandler.new.remove_card_from_deck(remove_card_from_deck)
 
-      expect(event_store).to have_published(deck_created_in_course, card_added_to_deck)
+      expect(event_store).to have_published(
+        deck_created_in_course, deck_title_set, card_added_to_deck, card_removed_from_deck
+      )
     end
 
     private
@@ -67,6 +71,13 @@ module Content
       an_event(Content::DeckCreatedInCourse).with_data(
         course_uuid: english_grammar[:course_uuid],
         deck_uuid: phrasal_verbs[:deck_uuid]
+      ).strict
+    end
+
+    def deck_title_set
+      an_event(Content::DeckTitleSet).with_data(
+        deck_uuid: phrasal_verbs[:deck_uuid],
+        title: phrasal_verbs[:title]
       ).strict
     end
 
