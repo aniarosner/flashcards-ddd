@@ -9,6 +9,7 @@ module FlashcardsApp
     config.load_defaults 5.2
 
     config.paths.add 'command/lib', eager_load: true
+    config.paths.add 'test_aggregate_root/lib', eager_load: true
     config.paths.add 'content/lib', eager_load: true
     config.paths.add 'ui/lib', eager_load: true
   end
