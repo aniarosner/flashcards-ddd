@@ -8,8 +8,8 @@ module Content
       course = Content::Course.new(english_grammar[:course_uuid])
       course.create
 
-      # expect(course).to have_applied(course_created)
       expect(course_stored_events).to include(course_created)
+      expect(course.instance_variable_get(:@state)).to eq Content::CourseState.new(:created)
     end
 
     specify 'course cannot be created twice' do
@@ -32,7 +32,6 @@ module Content
       course.create
       course.set_title(english_grammar[:title])
 
-      # expect(course).to have_applied(course_created, course_title_set)
       expect(course_stored_events).to include(course_created, course_title_set)
     end
 
@@ -42,7 +41,6 @@ module Content
       course.set_title(english_grammar[:title])
       course.remove
 
-      # expect(course).to have_applied(course_created, course_title_set, course_removed)
       expect(course_stored_events).to include(course_created, course_title_set, course_removed)
     end
 
