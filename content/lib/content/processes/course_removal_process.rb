@@ -22,7 +22,7 @@ module Content
       deck_uuids = load_deck_uuids(course_uuid)
 
       deck_uuids.each do |deck_uuid|
-        @command_bus.call(Content::RemoveDeck.new(course_uuid: course_uuid, deck_uuid: deck_uuid))
+        @command_bus.call(Content::RemoveDeck.new(deck_uuid: deck_uuid))
       end
     end
 
