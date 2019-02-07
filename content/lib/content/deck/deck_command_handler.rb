@@ -1,4 +1,13 @@
 module Content
+  class Deck
+    CourseNotCreated  = Class.new(StandardError)
+    AlreadyCreated    = Class.new(StandardError)
+    Removed           = Class.new(StandardError)
+    NotCreated        = Class.new(StandardError)
+    CardAlreadyInDeck = Class.new(StandardError)
+    CardNotPresent    = Class.new(StandardError)
+  end
+
   class DeckCommandHandler
     def initialize
       @event_store = Rails.configuration.event_store
@@ -6,63 +15,77 @@ module Content
     end
 
     def create_deck_in_course(cmd)
-      ActiveRecord::Base.transaction do
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.create_in_course(cmd.course_uuid, @course_presence_validator)
-        end
+      load_deck(cmd.deck_uuid) do |deck, course, _cards|
+        deck.create_in_course(cmd.course_uuid, course, @course_presence_validator)
+        Content::DeckCreatedInCourse.new(data: { deck_uuid: cmd.deck_uuid, course_uuid: cmd.course_uuid })
       end
     end
 
     def set_deck_title(cmd)
-      ActiveRecord::Base.transaction do
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.set_title(cmd.title)
-        end
+      load_deck(cmd.deck_uuid) do |deck, _course, _cards|
+        deck.set_title
+        Content::DeckTitleSet.new(data: { deck_uuid: cmd.deck_uuid, title: cmd.title })
       end
     end
 
     def remove_deck(cmd)
-      ActiveRecord::Base.transaction do
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.remove
-        end
+      load_deck(cmd.deck_uuid) do |deck, course, _cards|
+        deck.remove
+        Content::DeckRemoved.new(data: { deck_uuid: cmd.deck_uuid, course_uuid: course.course_uuid })
       end
     end
 
     def add_card_to_deck(cmd)
-      ActiveRecord::Base.transaction do
-        card = Content::Card.new(cmd.front, cmd.back)
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.add_card(card)
-        end
+      card = Content::Card.new(cmd.front, cmd.back)
+      load_deck(cmd.deck_uuid) do |deck, _course, cards|
+        deck.add_card(card, cards)
+        Content::CardAddedToDeck.new(data: { deck_uuid: cmd.deck_uuid, front: card.front, back: card.back })
       end
     end
 
     def remove_card_from_deck(cmd)
-      ActiveRecord::Base.transaction do
-        card = Content::Card.new(cmd.front, cmd.back)
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.remove_card(card)
-        end
+      card = Content::Card.new(cmd.front, cmd.back)
+      load_deck(cmd.deck_uuid) do |deck, _course, cards|
+        deck.remove_card(card, cards)
+        Content::CardRemovedFromDeck.new(data: { deck_uuid: cmd.deck_uuid, front: card.front, back: card.back })
       end
     end
 
     private
 
-    def with_deck(deck_uuid)
-      Content::Deck.new(deck_uuid).tap do |deck|
-        load_deck(deck_uuid, deck)
-        yield deck
-        store_deck(deck)
+    def load_deck(deck_uuid)
+      version = -1
+      course = DeckCourse.new
+      cards = DeckCards.new
+      deck = Deck.new
+
+      @event_store.read.stream(stream_name(deck_uuid)).each do |event|
+        case event
+        when Content::DeckCreatedInCourse
+          deck = deck.create_in_course(event.data[:course_uuid], course, @course_presence_validator)
+        when Content::DeckTitleSet
+          deck = deck.set_title
+        when Content::DeckRemoved
+          deck = deck.remove
+        when Content::CardAddedToDeck
+          card = Content::Card.new(event.data[:front], event.data[:back])
+          deck = deck.add_card(card, cards)
+        when Content::CardRemovedFromDeck
+          card = Content::Card.new(event.data[:front], event.data[:back])
+          deck = deck.remove_card(card, cards)
+        end
+        version += 1
       end
+      events = yield deck, course, cards
+      publish(events, deck_uuid, version)
     end
 
-    def load_deck(deck_uuid, deck)
-      deck.load(stream_name(deck_uuid), event_store: @event_store)
-    end
-
-    def store_deck(deck)
-      deck.store(event_store: @event_store)
+    def publish(events, deck_uuid, version)
+      @event_store.publish(
+        events,
+        stream_name: stream_name(deck_uuid),
+        expected_version: version
+      )
     end
 
     def stream_name(deck_uuid)
