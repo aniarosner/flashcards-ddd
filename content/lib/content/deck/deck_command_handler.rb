@@ -6,63 +6,51 @@ module Content
     end
 
     def create_deck_in_course(cmd)
-      ActiveRecord::Base.transaction do
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.create_in_course(cmd.course_uuid, @course_presence_validator)
-        end
+      with_state(cmd.deck_uuid) do |state|
+        Deck::CreateInCourse.new.call(state, cmd.course_uuid, @course_presence_validator)
       end
     end
 
     def set_deck_title(cmd)
-      ActiveRecord::Base.transaction do
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.set_title(cmd.title)
-        end
+      with_state(cmd.deck_uuid) do |state|
+        Deck::SetTitle.new.call(state, cmd.title)
       end
     end
 
     def remove_deck(cmd)
-      ActiveRecord::Base.transaction do
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.remove
-        end
+      with_state(cmd.deck_uuid) do |state|
+        Deck::Remove.new.call(state)
       end
     end
 
     def add_card_to_deck(cmd)
-      ActiveRecord::Base.transaction do
-        card = Content::Card.new(cmd.front, cmd.back)
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.add_card(card)
-        end
+      card = Content::Card.new(cmd.front, cmd.back)
+      with_state(cmd.deck_uuid) do |state|
+        Deck::AddCard.new.call(state, card)
       end
     end
 
     def remove_card_from_deck(cmd)
-      ActiveRecord::Base.transaction do
-        card = Content::Card.new(cmd.front, cmd.back)
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.remove_card(card)
-        end
+      card = Content::Card.new(cmd.front, cmd.back)
+      with_state(cmd.deck_uuid) do |state|
+        Deck::RemoveCard.new.call(state, card)
       end
     end
 
     private
 
-    def with_deck(deck_uuid)
-      Content::Deck.new(deck_uuid).tap do |deck|
-        load_deck(deck_uuid, deck)
-        yield deck
-        store_deck(deck)
+    attr_reader :event_store
+
+    def with_state(deck_uuid)
+      version = -1
+      state   = DeckState.new(deck_uuid, :initialized, nil, [])
+      event_store.read.stream(stream_name(deck_uuid)).each do |event|
+        state.apply(event)
+        version += 1
       end
-    end
 
-    def load_deck(deck_uuid, deck)
-      deck.load(stream_name(deck_uuid), event_store: @event_store)
-    end
-
-    def store_deck(deck)
-      deck.store(event_store: @event_store)
+      events = yield state
+      event_store.publish(events, stream_name: stream_name(deck_uuid), expected_version: version)
     end
 
     def stream_name(deck_uuid)
