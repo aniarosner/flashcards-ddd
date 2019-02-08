@@ -14,16 +14,17 @@ module Content
 
     specify 'add deck to course' do
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
-      deck.create_in_course(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new)
 
-      expect(deck).to have_applied(deck_created_in_course)
+      expect { deck.can_create_in_course?(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new) }.not_to(
+        raise_error
+      )
     end
 
     specify 'cannot add deck twice' do
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
-      deck.create_in_course(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new)
+      deck.create_in_course(english_grammar[:course_uuid])
 
-      expect { deck.create_in_course(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new) }.to(
+      expect { deck.can_create_in_course?(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new) }.to(
         raise_error(Content::Deck::AlreadyCreated)
       )
     end
@@ -31,96 +32,86 @@ module Content
     specify 'cannot add deck to not created course' do
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
 
-      expect { deck.create_in_course(english_grammar[:course_uuid], FailureCoursePresenceValidator.new) }.to(
+      expect { deck.can_create_in_course?(english_grammar[:course_uuid], FailureCoursePresenceValidator.new) }.to(
         raise_error(Content::Deck::CourseNotCreated)
       )
     end
 
     specify 'set deck title' do
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
-      deck.create_in_course(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new)
-      deck.set_title(phrasal_verbs[:title])
+      deck.create_in_course(english_grammar[:course_uuid])
 
-      expect(deck).to have_applied(deck_title_set)
+      expect { deck.can_set_title? }.not_to(raise_error)
     end
 
     specify 'remove deck' do
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
-      deck.create_in_course(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new)
-      deck.remove
+      deck.create_in_course(english_grammar[:course_uuid])
 
-      expect(deck).to have_applied(deck_created_in_course, deck_removed)
+      expect { deck.can_remove? }.not_to(raise_error)
     end
 
     specify 'cannot remove deck twice' do
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
-      deck.create_in_course(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new)
+      deck.create_in_course(english_grammar[:course_uuid])
       deck.remove
 
-      expect { deck.remove }.to(raise_error(Content::Deck::Removed))
+      expect { deck.can_remove? }.to(raise_error(Content::Deck::Removed))
     end
 
     specify 'add card to deck' do
+      card = Content::Card.new(look_forward_to[:front], look_forward_to[:back])
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
-      deck.create_in_course(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new)
-      deck.add_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back]))
+      deck.create_in_course(english_grammar[:course_uuid])
 
-      expect(deck).to have_applied(deck_created_in_course, card_added_to_deck)
+      expect { deck.can_add_card?(card) }.not_to(raise_error)
     end
 
     specify 'cannot add twice same card to deck' do
+      card = Content::Card.new(look_forward_to[:front], look_forward_to[:back])
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
-      deck.create_in_course(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new)
-      deck.add_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back]))
+      deck.create_in_course(english_grammar[:course_uuid])
+      deck.add_card(card)
 
-      expect { deck.add_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back])) }.to(
-        raise_error(Content::Deck::CardAlreadyInDeck)
-      )
+      expect { deck.can_add_card?(card) }.to(raise_error(Content::Deck::CardAlreadyInDeck))
     end
 
     specify 'remove card from deck' do
+      card = Content::Card.new(look_forward_to[:front], look_forward_to[:back])
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
-      deck.create_in_course(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new)
-      deck.add_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back]))
-      deck.remove_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back]))
+      deck.create_in_course(english_grammar[:course_uuid])
+      deck.add_card(card)
 
-      expect(deck).to have_applied(deck_created_in_course, card_added_to_deck, card_removed_from_deck)
+      expect { deck.can_remove_card?(card) }.not_to(raise_error)
     end
 
     specify 'cannot remove card from deck that is not present' do
+      card = Content::Card.new(look_forward_to[:front], look_forward_to[:back])
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
-      deck.create_in_course(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new)
+      deck.create_in_course(english_grammar[:course_uuid])
 
-      expect { deck.remove_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back])) }.to(
-        raise_error(Content::Deck::CardNotPresent)
-      )
+      expect { deck.can_remove_card?(card) }.to(raise_error(Content::Deck::CardNotPresent))
     end
 
     specify 'cannot make operations on not created deck' do
+      card = Content::Card.new(look_forward_to[:front], look_forward_to[:back])
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
 
-      expect { deck.set_title(phrasal_verbs[:title]) }.to(raise_error(Content::Deck::NotCreated))
-      expect { deck.add_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back])) }.to(
-        raise_error(Content::Deck::NotCreated)
-      )
-      expect { deck.remove_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back])) }.to(
-        raise_error(Content::Deck::NotCreated)
-      )
-      expect { deck.remove }.to(raise_error(Content::Deck::NotCreated))
+      expect { deck.can_set_title? }.to(raise_error(Content::Deck::NotCreated))
+      expect { deck.can_add_card?(card) }.to(raise_error(Content::Deck::NotCreated))
+      expect { deck.can_remove_card?(card) }.to(raise_error(Content::Deck::NotCreated))
+      expect { deck.can_remove? }.to(raise_error(Content::Deck::NotCreated))
     end
 
     specify 'cannot make operations on removed deck' do
+      card = Content::Card.new(look_forward_to[:front], look_forward_to[:back])
       deck = Content::Deck.new(phrasal_verbs[:deck_uuid])
-      deck.create_in_course(english_grammar[:course_uuid], SuccessCoursePresenceValidator.new)
+      deck.create_in_course(english_grammar[:course_uuid])
       deck.remove
 
-      expect { deck.set_title(phrasal_verbs[:title]) }.to(raise_error(Content::Deck::Removed))
-      expect { deck.add_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back])) }.to(
-        raise_error(Content::Deck::Removed)
-      )
-      expect { deck.remove_card(Content::Card.new(look_forward_to[:front], look_forward_to[:back])) }.to(
-        raise_error(Content::Deck::Removed)
-      )
+      expect { deck.can_set_title? }.to(raise_error(Content::Deck::Removed))
+      expect { deck.can_add_card?(card) }.to(raise_error(Content::Deck::Removed))
+      expect { deck.can_remove_card?(card) }.to(raise_error(Content::Deck::Removed))
     end
 
     private

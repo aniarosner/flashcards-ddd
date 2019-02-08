@@ -1,7 +1,5 @@
 module Content
   class Deck
-    include AggregateRoot
-
     CourseNotCreated = Class.new(StandardError)
     AlreadyCreated = Class.new(StandardError)
     Removed = Class.new(StandardError)
@@ -9,69 +7,77 @@ module Content
     CardAlreadyInDeck = Class.new(StandardError)
     CardNotPresent = Class.new(StandardError)
 
+    attr_reader :deck_uuid, :course_uuid
+
     def initialize(deck_uuid)
       @deck_uuid = deck_uuid
-      @state = Content::DeckState.new(:initialized)
+      @state = :initialized
       @course_uuid = nil
       @cards = []
     end
 
-    def create_in_course(course_uuid, course_presence_validator)
-      raise CourseNotCreated unless course_presence_validator.verify(course_uuid)
-      raise AlreadyCreated unless @state.initialized?
-
-      apply(Content::DeckCreatedInCourse.new(data: { deck_uuid: @deck_uuid, course_uuid: course_uuid }))
+    def create_in_course(course_uuid)
+      self.state = :created
+      self.course_uuid = course_uuid
     end
 
-    def set_title(title)
-      raise NotCreated if @state.initialized?
-      raise Removed if @state.removed?
-
-      apply(Content::DeckTitleSet.new(data: { deck_uuid: @deck_uuid, title: title }))
-    end
+    def set_title; end
 
     def remove
-      raise NotCreated if @state.initialized?
-      raise Removed if @state.removed?
-
-      apply(Content::DeckRemoved.new(data: { deck_uuid: @deck_uuid, course_uuid: @course_uuid }))
+      self.state = :removed
+      self.cards = []
     end
 
     def add_card(card)
-      raise NotCreated if @state.initialized?
-      raise Removed if @state.removed?
-      raise CardAlreadyInDeck if card.in?(@cards)
-
-      apply(Content::CardAddedToDeck.new(data: { deck_uuid: @deck_uuid, front: card.front, back: card.back }))
+      cards.push(card)
     end
 
     def remove_card(card)
-      raise NotCreated if @state.initialized?
-      raise Removed if @state.removed?
-      raise CardNotPresent unless card.in?(@cards)
-
-      apply(Content::CardRemovedFromDeck.new(data: { deck_uuid: @deck_uuid, front: card.front, back: card.back }))
+      cards.delete(card)
     end
 
-    on Content::DeckCreatedInCourse do |event|
-      @state = Content::DeckState.new(:created)
-      @course_uuid = event.data[:course_uuid]
+    def can_create_in_course?(course_uuid, course_presence_validator)
+      raise Deck::CourseNotCreated unless course_presence_validator.verify(course_uuid)
+      raise Deck::AlreadyCreated unless initialized?
     end
 
-    on Content::DeckTitleSet do |_event|
+    def can_set_title?
+      raise Deck::NotCreated if initialized?
+      raise Deck::Removed if removed?
     end
 
-    on Content::DeckRemoved do |_event|
-      @state = Content::DeckState.new(:removed)
-      @cards = []
+    def can_remove?
+      raise Deck::NotCreated if initialized?
+      raise Deck::Removed if removed?
     end
 
-    on Content::CardAddedToDeck do |event|
-      @cards.push(Content::Card.new(event.data[:front], event.data[:back]))
+    def can_add_card?(card)
+      raise Deck::NotCreated if initialized?
+      raise Deck::Removed if removed?
+      raise Deck::CardAlreadyInDeck if card.in?(cards)
     end
 
-    on Content::CardRemovedFromDeck do |event|
-      @cards.delete(Content::Card.new(event.data[:front], event.data[:back]))
+    def can_remove_card?(card)
+      raise Deck::NotCreated if initialized?
+      raise Deck::Removed if removed?
+      raise Deck::CardNotPresent unless card.in?(cards)
+    end
+
+    private
+
+    attr_accessor :state, :cards
+    attr_writer :course_uuid
+
+    def initialized?
+      state.equal?(:initialized)
+    end
+
+    def created?
+      state.equal?(:created)
+    end
+
+    def removed?
+      state.equal?(:removed)
     end
   end
 end

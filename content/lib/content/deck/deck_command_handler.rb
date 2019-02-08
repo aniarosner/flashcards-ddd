@@ -6,63 +6,51 @@ module Content
     end
 
     def create_deck_in_course(cmd)
-      ActiveRecord::Base.transaction do
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.create_in_course(cmd.course_uuid, @course_presence_validator)
-        end
+      with_aggregate(cmd.deck_uuid) do |deck|
+        deck.can_create_in_course?(cmd.course_uuid, @course_presence_validator)
+        Content::DeckCreatedInCourse.new(data: { deck_uuid: cmd.deck_uuid, course_uuid: cmd.course_uuid })
       end
     end
 
     def set_deck_title(cmd)
-      ActiveRecord::Base.transaction do
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.set_title(cmd.title)
-        end
+      with_aggregate(cmd.deck_uuid) do |deck|
+        deck.can_set_title?
+        Content::DeckTitleSet.new(data: { deck_uuid: cmd.deck_uuid, title: cmd.title })
       end
     end
 
     def remove_deck(cmd)
-      ActiveRecord::Base.transaction do
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.remove
-        end
+      with_aggregate(cmd.deck_uuid) do |deck|
+        deck.can_remove?
+        Content::DeckRemoved.new(data: { deck_uuid: cmd.deck_uuid, course_uuid: deck.course_uuid })
       end
     end
 
     def add_card_to_deck(cmd)
-      ActiveRecord::Base.transaction do
-        card = Content::Card.new(cmd.front, cmd.back)
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.add_card(card)
-        end
+      card = Content::Card.new(cmd.front, cmd.back)
+      with_aggregate(cmd.deck_uuid) do |deck|
+        deck.can_add_card?(card)
+        Content::CardAddedToDeck.new(data: { deck_uuid: cmd.deck_uuid, front: card.front, back: card.back })
       end
     end
 
     def remove_card_from_deck(cmd)
-      ActiveRecord::Base.transaction do
-        card = Content::Card.new(cmd.front, cmd.back)
-        with_deck(cmd.deck_uuid) do |deck|
-          deck.remove_card(card)
-        end
+      card = Content::Card.new(cmd.front, cmd.back)
+      with_aggregate(cmd.deck_uuid) do |deck|
+        deck.can_remove_card?(card)
+        Content::CardRemovedFromDeck.new(data: { deck_uuid: cmd.deck_uuid, front: card.front, back: card.back })
       end
     end
 
     private
 
-    def with_deck(deck_uuid)
-      Content::Deck.new(deck_uuid).tap do |deck|
-        load_deck(deck_uuid, deck)
-        yield deck
-        store_deck(deck)
-      end
-    end
+    attr_reader :event_store
 
-    def load_deck(deck_uuid, deck)
-      deck.load(stream_name(deck_uuid), event_store: @event_store)
-    end
-
-    def store_deck(deck)
-      deck.store(event_store: @event_store)
+    def with_aggregate(deck_uuid)
+      deck = Content::Deck.new(deck_uuid)
+      state = Content::DeckProjection.new(event_store).call(deck, stream_name(deck_uuid))
+      event = yield state.deck
+      event_store.publish(event, stream_name: stream_name(deck_uuid), expected_version: state.version)
     end
 
     def stream_name(deck_uuid)
