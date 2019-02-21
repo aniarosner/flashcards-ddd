@@ -8,4 +8,4 @@ Live [here](https://flashcards-ddd.herokuapp.com/).
 ![Bounded contexts](/docs/bc.jpg)
 
 ## Process
-<img src="/docs/process.jpg" width="120">
+<img src="/docs/process.jpg" width="250">
